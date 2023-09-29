@@ -11,6 +11,11 @@ Enter `exit` to leave mode
  Enter with the `enable` command.
  Enter `exit` to leave mode
 
+ Priviledged Exec Commands Include:
+ - `show running-config` | `sh run` - exactly what you would expect
+ - `show startup-config` | `sh start` - exactly what you would expect
+ - `write` | `write memory` | `copy running-config startup-config` - all commands are used to save the running configuration as the startup configuration
+ 
 ## Global Config Mode
  Enter with `configure terminal`
  Enter `exit` to leave mode
@@ -21,9 +26,7 @@ Enter `exit` to leave mode
  - `enable password <YOUR PASSWORD HERE>` - enables `<YOUR PASSWORD HERE>` as the password
  - `service password-encryption` - used to encrypt password so that it does not display on `show running-config` command.
  - `enable secret <YOUR SECRET HERE>` enables `<YOUR SECRET HERE>` as a secret which offers more robust encryption
- - `show running-config` | `sh run` - exactly what you would expect
- - `show startup-config` | `sh start` - exactly what you would expect
- - `write` | `write memory` | `copy running-config startup-config` - all commands are used to save the running configuration as the startup configuration
+ - `hostname` - change hostname
  
 
 To cancel commands, use `no` before the command of interest. For example, to avoid future passwords from automatically being encrypted, run `no service password-encryption`. 
