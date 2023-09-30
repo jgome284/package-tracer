@@ -8,14 +8,19 @@ Default mode with limited options...
 Enter `exit` to leave mode
 
 ## Priveledged Exec Mode
- Enter with the `enable` command.
+ Enter with the `enable` | `en` command.
  Enter `exit` to leave mode
 
  Priviledged Exec Commands Include:
  - `show running-config` | `sh run` - exactly what you would expect
  - `show startup-config` | `sh start` - exactly what you would expect
  - `write` | `write memory` | `copy running-config startup-config` - all commands are used to save the running configuration as the startup configuration
- 
+ - `show arp` - used to display the ARP cache on a device. The ARP cache is a database that stores the IP addresses and MAC addresses of devices on the network.
+ - `show mac address-table` - used to display the MAC address table on a device. The MAC address table is a database that stores the MAC addresses and ports of devices on the network.
+ - `clear mac address-table dynamic` - used to clear all dynamic MAC addresses from network device.
+ - `clear mac address-table dynamic address <INSERT DYNAMIC MAC ADDRESS HERE>` - used to clear specific dynamic MAC address.
+ - `clear mac address-table dynamic interface <INSERT PORT ID HERE>` - used to clear all dynamic MAC addresses from network device.
+
 ## Global Config Mode
  Enter with `configure terminal`
  Enter `exit` to leave mode
