@@ -25,6 +25,7 @@ Enter `exit` to leave mode
  - `show interfaces <INTERFACE PORT HERE>` - shows interface information for specified port. For example, `show interfaces g0/0`
  - `show interfaces decription` - Provides table of interfaces with decription included.
  - `show interfaces status` - shows interface information like port, name, status, Vlan, duplex, speed, and type.
+ - `show ip route` - shows the routers ip routing table. If prompt state *Gateway of last resort is not set* then a default route has not been configured yet.
 
 ## Interface Config Mode
 To enter interface configuration mode, you must be in global config mode, then enter `interface <INTERFACE NAME>` | `in <INTERFACE NAME>`. For example, `interface gigabitethernet 0/0` | `in g0/0`.
@@ -50,7 +51,10 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
  - `service password-encryption` - used to encrypt password so that it does not display on `show running-config` command.
  - `enable secret <YOUR SECRET HERE>` enables `<YOUR SECRET HERE>` as a secret which offers more robust encryption
  - `hostname` - change hostname
- 
+ - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <NEXT-HOP>` - used to configure a static route on a router. For example, `ip route 192.168.1.0 255.255.255.0 192.168.34.3` would configure the router's 192.168.34.3 port interface as the next hop for all traffic with a destination address of 192.168.1.0/24.
+ - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <EXIT-INTERFACE>` - used to configure a static route on the router by pointing to a port interface.
+
+ To set a default route to the internet you can use the `ip route` command with the least specific destination ip address, i.e. `ip route 0.0.0.0 0.0.0.0 <SELECT EXIT-INTERFACE or NEXT-HOP IP or both>`
 
 To cancel commands, use `no` before the command of interest. For example, to avoid future passwords from automatically being encrypted, run `no service password-encryption`. 
 
