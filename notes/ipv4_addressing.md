@@ -6,16 +6,18 @@ The IPv4 header is divided into the following fields:
 
 - Version: This field indicates the version of the IP protocol.
 - Internet Header Length (IHL): This field indicates the length of the IPv4 header in 32-bit words.
-- Type of Service (TOS): This field indicates the type of service that the packet should receive.
-- Total Length: This field indicates the length of the IP packet in bytes, including the header and the data.
-- Identification: This field is used to identify the IP packet.
-- Flags: This field indicates whether the packet is fragmented and how to reassemble it.
-- Fragment Offset: This field indicates the offset of the fragment in the original IP packet.
-- Time to Live (TTL): This field indicates how long the packet should be allowed to live on the network.
-- Protocol: This field indicates the type of protocol that is encapsulated in the IP packet.
-- Header Checksum: This field is used to verify the integrity of the IP header.
+- Differentiated Services Code Point (DSCP): used for quality of services (QOS)... used to prioritize delay-sensitive data (streaming, voice, video, etc.)
+- Explicit Congestion Notification (ECN): provides end-to-end notification of network congestion without dropping packets.
+- Total Length: This field indicates the length of the IP packet in bytes, including the L3 header and L4 segment.
+- Identification: If a packet is fragmented due to being too large, this field is used to identify which packet the fragment belongs to.
+- Flags: Used to control/identify fragments. This field indicates whether the packet is fragmented and how to reassemble it.
+- Fragment Offset: This field indicates the position of the fragment in the original unfragmented IP packet. Allows fragmented packets to be reassembled even if they arrive out of order.
+- Time to Live (TTL): This field indicates how long the packet should be allowed to live on the network. Each time a packet arrives at a router, the router decreases the TTL by 1. The recommended TTL is 64. It's used to prevent infinite loops
+- Protocol: This field indicates the protocol of the encapsulated L4 PDU in the IP packet, whether TCP, UDP, ICMP, OSPF (dynamic routing protocol), etc.
+- Header Checksum: This field is used to verify the integrity of the IP header. Not the encapsulated data.
 - Source IP Address: This field contains the IP address of the sender of the IP packet.
 - Destination IP Address: This field contains the IP address of the recipient of the IP packet.
+- Options: rarely used, however, if the IHL field is greater than 5, it means that options are present.
 
 The IPv4 header is essential for the routing and delivery of IP packets. It contains the information that routers need to determine how to forward the packet to its destination.
 
