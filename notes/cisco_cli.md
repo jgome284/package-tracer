@@ -20,6 +20,18 @@ Enter `exit` to leave mode
  - `clear mac address-table dynamic` - used to clear all dynamic MAC addresses from network device.
  - `clear mac address-table dynamic address <INSERT DYNAMIC MAC ADDRESS HERE>` - used to clear specific dynamic MAC address.
  - `clear mac address-table dynamic interface <INSERT PORT ID HERE>` - used to clear all dynamic MAC addresses from network device.
+ - `show ip interface brief` | `sh ip int br` - shows ip status of router interfaces... information includes interface name, IP-Address assigned, layer 1 status - whether the connection is up or down, and the layer 2 - protocol - status 
+ - `show interfaces` - shows information about all interfaces
+ - `show interfaces <INTERFACE PORT HERE>` - shows interface information for specified port. For example, `show interfaces g0/0`
+ - `show interfaces decription` - Provides table of interfaces with decription included.
+
+## Interface Config Mode
+To enter interface configuration mode, you must be in global config mode, then enter `interface <INTERFACE NAME>` | `in <INTERFACE NAME>`. For example, `interface gigabitethernet 0/0` | `in g0/0`.
+
+- `ip address <IP ADDRESS> <NETMASK>` | `ip add <IP ADDRESS> <NETMASK>` - used to set IP address. For example, `ip address 10.255.255.254 255.0.0.0` for an ip address that is equal to the Class A address, 10.255.255.254/8.
+- `no shutdown` | `no shut` - used to enable the interface on the router. Cisco router interface have the `shutdown` command applied to them by default.
+- `description <YOUR DECRIPTION> | desc <YOUR DECRIPTION>` - used to add interface description.
+
 
 ## Global Config Mode
  Enter with `configure terminal`
