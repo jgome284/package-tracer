@@ -24,13 +24,19 @@ Enter `exit` to leave mode
  - `show interfaces` - shows information about all interfaces
  - `show interfaces <INTERFACE PORT HERE>` - shows interface information for specified port. For example, `show interfaces g0/0`
  - `show interfaces decription` - Provides table of interfaces with decription included.
+ - `show interfaces status` - shows interface information like port, name, status, Vlan, duplex, speed, and type.
 
 ## Interface Config Mode
 To enter interface configuration mode, you must be in global config mode, then enter `interface <INTERFACE NAME>` | `in <INTERFACE NAME>`. For example, `interface gigabitethernet 0/0` | `in g0/0`.
 
+To configure several interfaces all at once, type `interface range <INTERFACE START> - <INTERFACE END>`
+
 - `ip address <IP ADDRESS> <NETMASK>` | `ip add <IP ADDRESS> <NETMASK>` - used to set IP address. For example, `ip address 10.255.255.254 255.0.0.0` for an ip address that is equal to the Class A address, 10.255.255.254/8.
-- `no shutdown` | `no shut` - used to enable the interface on the router. Cisco router interface have the `shutdown` command applied to them by default.
+- `shutdown` - used to disable interface on network device.
+- `no shutdown` | `no shut` - used to enable the interface on the network device. Note: Cisco router interface have the `shutdown` command applied to them by default.
 - `description <YOUR DECRIPTION> | desc <YOUR DECRIPTION>` - used to add interface description.
+- `speed <SPEED>` - sets interface speed: 10, 100, auto, etc.
+- `duplex <DUPLEX>` - sets interface duplex: auto, full, half.
 
 
 ## Global Config Mode
