@@ -142,3 +142,46 @@ In this case, the most efficient use is to discard the need for a network and br
 - First Usable Address: 11000000.10101000.00000001.111100 | 0 --> 192.168.1.240/31
 - Last Usable Address: 11000000.10101000.00000001.111100 | 1 --> 192.168.1.241/31
 - Total Number of Usable Host Addresses: 2!
+
+Imagine you are assigned the 192.168.5.0/24 (11000000.10101000.00000101.00000000) network and you need to subdivide it into 5 subnets of different sizes.
+- **LAN 1** = 45 hosts
+- **LAN 2** = 64 hosts
+- **LAN 3** = 14 hosts
+- **LAN 4** = 9 hosts
+- **LAN 5** = A point-to-point connection between two routers
+
+**LAN 2**
+Needs 128 addresses to have 64 hosts... that is 7 borrowed bits
+    - Network Address: 11000000.10101000.00000101.0 | 0000000 --> 192.168.5.0/25
+    - Broadcast Address: 11000000.10101000.00000101.0 | 1111111 --> 192.168.5.127/25
+    - First Usable Address: 192.168.5.1/25
+    - Last Usable Address: 192.168.5.126/25
+    - Total Number of Usable Host Addresses: 2^7-2 = 126
+
+**LAN 1**
+    - Network Address: 11000000.10101000.00000101.10 | 000000 --> 192.168.5.128/26
+    - Broadcast Address: 11000000.10101000.00000101.10 | 111111 --> 192.168.5.191/26
+    - First Usable Address: 192.168.5.129/26
+    - Last Usable Address: 192.168.5.190/26
+    - Total Number of Usable Host Addresses: 2^6-2 = 62
+
+**LAN 3**
+    - Network Address: 11000000.10101000.00000101.1100 | 0000 --> 192.168.5.192/28
+    - Broadcast Address: 11000000.10101000.00000101.1100 | 1111 --> 192.168.5.207/28
+    - First Usable Address: 192.168.5.193/28
+    - Last Usable Address: 192.168.5.206/28
+    - Total Number of Usable Host Addresses: 2^4-2 = 14
+
+**LAN 4**
+    - Network Address: 11000000.10101000.00000101.1101 | 0000 --> 192.168.5.208/28
+    - Broadcast Address: 11000000.10101000.00000101.1101 | 1111 --> 192.168.5.223/28
+    - First Usable Address: 192.168.5.209/28
+    - Last Usable Address: 192.168.5.222/28
+    - Total Number of Usable Host Addresses: 2^4-2 = 14
+
+**LAN 5**
+    - Network Address: 11000000.10101000.00000101.111000 | 00 --> 192.168.5.224/30 -- 255.255.255.252
+    - Broadcast Address: 11000000.10101000.00000101.111000 | 11 --> 192.168.5.227/30
+    - First Usable Address: 192.168.5.225/30
+    - Last Usable Address: 192.168.5.226/30
+    - Total Number of Usable Host Addresses: 2
