@@ -26,19 +26,7 @@ Enter `exit` to leave mode
  - `show interfaces decription` - Provides table of interfaces with decription included.
  - `show interfaces status` - shows interface information like port, name, status, Vlan, duplex, speed, and type.
  - `show ip route` - shows the routers ip routing table. If prompt state *Gateway of last resort is not set* then a default route has not been configured yet.
-
-## Interface Config Mode
-To enter interface configuration mode, you must be in global config mode, then enter `interface <INTERFACE NAME>` | `in <INTERFACE NAME>`. For example, `interface gigabitethernet 0/0` | `in g0/0`.
-
-To configure several interfaces all at once, type `interface range <INTERFACE START> - <INTERFACE END>`
-
-- `ip address <IP ADDRESS> <NETMASK>` | `ip add <IP ADDRESS> <NETMASK>` - used to set IP address. For example, `ip address 10.255.255.254 255.0.0.0` for an ip address that is equal to the Class A address, 10.255.255.254/8.
-- `shutdown` - used to disable interface on network device.
-- `no shutdown` | `no shut` - used to enable the interface on the network device. Note: Cisco router interface have the `shutdown` command applied to them by default.
-- `description <YOUR DECRIPTION> | desc <YOUR DECRIPTION>` - used to add interface description.
-- `speed <SPEED>` - sets interface speed: 10, 100, auto, etc.
-- `duplex <DUPLEX>` - sets interface duplex: auto, full, half.
-
+ - `show vlan brief` - shows VLANs setup on a switch with associated ports. VLANs 1, 1002-1005 exist by default and cannot be deleted.
 
 ## Global Config Mode
  Enter with `configure terminal`
@@ -53,12 +41,29 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
  - `hostname` - change hostname
  - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <NEXT-HOP>` - used to configure a static route on a router. For example, `ip route 192.168.1.0 255.255.255.0 192.168.34.3` would configure the router's 192.168.34.3 port interface as the next hop for all traffic with a destination address of 192.168.1.0/24.
  - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <EXIT-INTERFACE>` - used to configure a static route on the router by pointing to a port interface.
+ - `vlan <VLAN #>` - creates a vlan and enables vlan configuration.
 
  To set a default route to the internet you can use the `ip route` command with the least specific destination ip address, i.e. `ip route 0.0.0.0 0.0.0.0 <SELECT EXIT-INTERFACE or NEXT-HOP IP or both>`
 
 To cancel commands, use `no` before the command of interest. For example, to avoid future passwords from automatically being encrypted, run `no service password-encryption`. 
 
+## Interface Config Mode
+To enter interface configuration mode, you must be in global config mode, then enter `interface <INTERFACE NAME>` | `in <INTERFACE NAME>`. For example, `interface gigabitethernet 0/0` | `in g0/0`.
 
+To configure several interfaces all at once, type `interface range <INTERFACE START> - <INTERFACE END>`
+
+- `ip address <IP ADDRESS> <NETMASK>` | `ip add <IP ADDRESS> <NETMASK>` - used to set IP address. For example, `ip address 10.255.255.254 255.0.0.0` for an ip address that is equal to the Class A address, 10.255.255.254/8.
+- `shutdown` - used to disable interface on network device.
+- `no shutdown` | `no shut` - used to enable the interface on the network device. Note: Cisco router interface have the `shutdown` command applied to them by default.
+- `description <YOUR DECRIPTION> | desc <YOUR DECRIPTION>` - used to add interface description.
+- `speed <SPEED>` - sets interface speed: 10, 100, auto, etc.
+- `duplex <DUPLEX>` - sets interface duplex: auto, full, half.
+- `switchport mode access` - sets interface as an access port, a switchport which belongs to a single VLAN, and usually connects to end hosts like PCs.
+- `switchport access vlan <VLAN #>` - sets switchport to vlan number specified. 
+
+## VLAN Config Mode
+To enter VLAN configuration mode, you must be in global config mode, then enter `vlan <VLAN #>`. For example, `vlan 1`.
+- `name` - provides name to vlan.
 
 # Configuration
  **Running-Config**
