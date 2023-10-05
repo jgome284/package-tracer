@@ -27,6 +27,7 @@ Enter `exit` to leave mode
  - `show interfaces status` - shows interface information like port, name, status, Vlan, duplex, speed, and type.
  - `show ip route` - shows the routers ip routing table. If prompt state *Gateway of last resort is not set* then a default route has not been configured yet.
  - `show vlan brief` - shows VLANs setup on a switch with associated ports. VLANs 1, 1002-1005 exist by default and cannot be deleted.
+- `show interfaces trunk` - shows vlans allowed on trunk port
 
 ## Global Config Mode
  Enter with `configure terminal`
@@ -59,7 +60,16 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
 - `speed <SPEED>` - sets interface speed: 10, 100, auto, etc.
 - `duplex <DUPLEX>` - sets interface duplex: auto, full, half.
 - `switchport mode access` - sets interface as an access port, a switchport which belongs to a single VLAN, and usually connects to end hosts like PCs.
+- `switchport mode trunk` - sets interface as an trunk port, a switchport which belongs to multiple VLANs. Before this works, the trunk encapsulation must be set to 802.1Q or ISL. However, on switches that only support 802.1Q, this is not necessary. By default all VLANs are allowed on the trunk.
+- `switchport trunk encapsulation dot1q` - sets trunk encapsulation mode to 802.1Q on **switch** interface. 
 - `switchport access vlan <VLAN #>` - sets switchport to vlan number specified. 
+- `switchport trunk allowed vlan ?` - sets VLANs allowed on trunk port. input`?` to see all options
+- `switchport trunk native vlan <VLAN #>` - changes the native VLAN on the switch. Make sure the native VLAN matches between switches in your network.
+
+## Subinterface Config Mode
+To create a *Router on a Stick* (ROAS) you can create subinterfaces by entering subinterface configuration mode. For example, `interface g0/0.10` creates a subinterface 10 on port g0/0... it is highly recommended for the subinterface number to match the VLAN number!
+- `encapsulation dot1q 10` - sets encapsulation mode to 802.1Q on VLAN 10
+- `ip address <ADDRESS> <NETMASK>` - sets ip address and net mask on sub interface.
 
 ## VLAN Config Mode
 To enter VLAN configuration mode, you must be in global config mode, then enter `vlan <VLAN #>`. For example, `vlan 1`.
