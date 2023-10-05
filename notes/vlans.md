@@ -38,3 +38,44 @@ Configuring VLANs involves several steps, including:
 6. **Monitoring and Management:** Continuously monitor and manage VLANs to ensure they meet your network's requirements and adjust configurations as necessary.
 
 VLANs are a powerful tool for network segmentation and management, and they play a crucial role in modern network architectures. Properly configured VLANs enhance network security, performance, and flexibility, making them a valuable resource for network administrators.
+
+# Trunk Ports
+In a small network with few VLANS, it is possible to use a separate interface for each VLAN when connecting switches, and switches to routers. However, when the number of VLANs increases, this is not viable. It will result in wasted interfaces, and often routers won't have enough interfaces for each VLAN.
+
+Switches will 'tag' all frames that they send over a trunk link. This allows the receiving switch or router to know which VLAN the frame belongs to.
+
+Trunk ports = 'tagged' ports
+Access ports = 'untagged' ports
+
+## Inter-Switch Link
+Inter-Switch Link is an old proprietary Cisco protocol, created before IEEE 802.1Q. Modern Cisco equipment no longer supports ISL.
+## IEEE 802.1Q Encapsulation
+IEEE 802.1Q is an industry standard protocol created by the IEEE.
+
+An Ethernet Frame includes the IEEE 802.1Q tag after the source MAC Address and the Type/Length field. It includes a Tag Protocol Identifier (TPID) and Tag Control Information (TCI). 
+
+The TPID is always set to a value of 0x8100 when the frame is tagged. (0x = hexadecimal)
+
+The TCI can be subdivided into 3 fields: 
+
+- PCP: Priority Code Point, 3 bits - Used for Class of Service (COS), which prioritizes important traffic in congested networks.
+- DEI: Drop Eligible Indicator, 1 bit - Used to indicate frames that can be dropped if the network is congested.
+- VID: VLAN ID, 12 bits = 4096 total VLANS (2^12), actual range of 1-4094, since 0 & 4095 are reserved.
+
+## VLAN Ranges
+Normal VLANS: 1-1005
+Extended VLANS: 1006-4094
+
+**Note:** Some older devices cannot use the extended VLAN range...
+
+## Native VLAN
+The native VLAN is VLAN 1 by default on all trunk ports, however this can be manually configured on each trunk port. The switch does not add an 802.1Q tag to frames in the native VLAN. When a switch receivecs an untagged frame on a trunk port, it assumes the frame belongs to the native VLAN. **it's very important that the native VLAN matches between switches!**
+
+For security purposes, it is best to change the native (default) VLAN to an unused VLAN.
+
+# Router on a Stick (ROAS)
+ROAS is used to route between multiple VLANs using a single interface on the router and 1 switch. It divides one physical interface between a router and switch into n logical subinterfaces
+
+The switch interface is configured as a regular trunk.
+
+The router interface is configured using **subinterfaces**, which means you configure the VLAN and IP address on each subinterface.
