@@ -8,6 +8,7 @@ An Ethernet frame consists of an Header, Payload, and Trailer. The Preamble and 
 - Start frame delimiter (SFD): This is a 1-byte field that marks the beginning of the frame.
 - Destination MAC address: This is a 6-byte field that contains the MAC address of the device that the frame is being sent to.
 - Source MAC address: This is a 6-byte field that contains the MAC address of the device that is sending the frame.
+- 802.1Q tag: 4-bytes or 32 bits. It includes Tag Protocol Identifier (TPID) and Tag Control Information (TCI). TCI can be subdivided into 3 fields: PCP, DEI, and VID.
 - Type / Length: This is a 2-byte field. A value of 1500 or less indicates the LENGTH of the encapsulated packet. 1536 or greater indicates the TYPE of the encapsulated packet (usually IPv4 or IPv6) and length is determined via other methods.
 - Payload: This is the data that is being transmitted.
 - Frame Check Sequence (FCS): This is a 4-byte field that is used to detect errors in the frame. It runs a a Cyclic Redundancy Check (CRC) algorithm
