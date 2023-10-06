@@ -23,11 +23,13 @@ Enter `exit` to leave mode
  - `show ip interface brief` | `sh ip int br` - shows ip status of router interfaces... information includes interface name, IP-Address assigned, layer 1 status - whether the connection is up or down, and the layer 2 - protocol - status 
  - `show interfaces` - shows information about all interfaces
  - `show interfaces <INTERFACE PORT HERE>` - shows interface information for specified port. For example, `show interfaces g0/0`
+ - `show interfaces <INTERFACE PORT HERE> switchport` - shows switchport administrative and operational modes.
  - `show interfaces decription` - Provides table of interfaces with decription included.
  - `show interfaces status` - shows interface information like port, name, status, Vlan, duplex, speed, and type.
  - `show ip route` - shows the routers ip routing table. If prompt state *Gateway of last resort is not set* then a default route has not been configured yet.
  - `show vlan brief` - shows VLANs setup on a switch with associated ports. VLANs 1, 1002-1005 exist by default and cannot be deleted.
 - `show interfaces trunk` - shows vlans allowed on trunk port
+- `show vtp status` - displays vtp information
 
 ## Global Config Mode
  Enter with `configure terminal`
@@ -45,6 +47,8 @@ Enter `exit` to leave mode
  - `vlan <VLAN #>` - creates a vlan and enables vlan configuration.
  - `ip routing` - enables layer 3 routing on a multilayer switch.
  - `no switchport` - configures the interface on a multilayer switch as a layer 3 routed port, not a switchport.
+ - `vtp domain <NAME>` - sets vtp domain name on switch. If a switch with no VTP domain (domain NULL) receives a VTP advertisement with a VTP domain name, it will automatically join that VTP domain. Changing the VTP domain to an unused domain will reset the revision number to 0.
+ - `vtp mode ?` - sets vtp mode on switch... valid commands are `server`, `client`, and `transparent`. If `transparent` is selected, the revision number is set back to 0.
 
  To set a default route to the internet you can use the `ip route` command with the least specific destination ip address, i.e. `ip route 0.0.0.0 0.0.0.0 <SELECT EXIT-INTERFACE or NEXT-HOP IP or both>`
 
@@ -63,6 +67,16 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
 - `duplex <DUPLEX>` - sets interface duplex: auto, full, half.
 - `switchport mode access` - sets interface as an access port, a switchport which belongs to a single VLAN, and usually connects to end hosts like PCs.
 - `switchport mode trunk` - sets interface as an trunk port, a switchport which belongs to multiple VLANs. Before this works, the trunk encapsulation must be set to 802.1Q or ISL. However, on switches that only support 802.1Q, this is not necessary. By default all VLANs are allowed on the trunk.
+- `switchport mode dynamic` - sets mode to dynamically negotiate access or trunk mode
+- `switchport mode dynamic ?` - give option to set `auto` or `desirable`
+    - `switchport mode dynamic auto` - will NOT actively try to form a trunk with other Cisco switches, however it will form a trunk if the switch connected to it is actively trying to form a trunk. It will for a trunk with a switchport in the following modes:
+        - switchport mode trunk
+        - switchport mode dynamic desirable
+    - `switchport mode dynamic desirable` - will actively try to form a trunk with other Cisco switches. It will form a trunk if connected to another switchport in the following modes:
+        - switchport mode trunk
+        - switchport mode dynamic desirable
+        - switchport mode dynamic auto
+- `switchport nonegotiate` - Used to disable DTP negotiation on an interface.
 - `switchport trunk encapsulation dot1q` - sets trunk encapsulation mode to 802.1Q on **switch** interface. 
 - `switchport access vlan <VLAN #>` - sets switchport to vlan number specified. 
 - `switchport trunk allowed vlan ?` - sets VLANs allowed on trunk port. input`?` to see all options
