@@ -1,0 +1,15 @@
+# VLAN Trunking Protocol (VTP)
+VTP is another Cisco proprietary protocol used to simplify VLAN management within a network by distributing VLAN configuration information. VTP is designed for large networks with many VLANs, so that you don't have to configure each VLAN on every switch. There are three VTP versions: 1, 2, and 3. Note that only VTP 3 supports the extended VLAN range.
+
+Here are some key points about VTP:
+
+1. **Centralized VLAN Management:** VTP is used to centralize VLAN configuration and management. In a VTP domain, one switch is designated as the VTP server, and it maintains a database of VLANs and their configurations. Changes made on the VTP server are propagated to other switches in the same VTP domain.
+
+2. **VTP Modes:** VTP operates in three modes:
+   - **Server:** The VTP server can create, modify, and delete VLANs and then propagate these changes to other switches in the same VTP domain. Cisco Switches operate in this mode by default. They will increase the revision number every time a VLAN is added/modified/delted. They also advertise the latest version of the VLAN database on trunk interfaces, and the VRP clients will synchronize their VLAN database to it. VTP servers also function as VTP clients if a VTP server synchronizes to another VTP server with a higher revision number. 
+   - **Client:** VTP clients listen to VTP advertisements from the server and apply the VLAN configurations received. They cannot add/modify/delete VLANs. In V1 and V2 of VTP, they do not store VLAN database in NVRAM, but in V3, they do. They will synchronize their VLAN database ot the server with the highest revision number in their VTP domain. They also advertise their VLAN database, and forward VTP advertisements to other clients over their trunk ports.
+   - **Transparent:** VTP transparent switches do not participate in VTP updates but do pass VTP advertisements through. They allow manual configuration of VLANs without being influenced by VTP updates. 
+
+3. **Security Considerations:** Incorrect VTP configurations can lead to unintended changes to the VLAN database. To mitigate this, it's essential to configure VTP domain names and use VTP passwords to ensure that only authorized switches can participate in VTP updates. If you connect an old switch with a higher revision number to your network (and the VTP domain name matches), all switches in the domain will sync their VLAN database to that switch.
+
+It's worth noting that both DTP and VTP are specific to Cisco networking equipment. Other vendors may use alternative protocols or mechanisms for similar purposes. Network administrators should carefully configure and manage these protocols to ensure the security and stability of their network infrastructure. Additionally, best practices often recommend disabling DTP on access ports and carefully controlling VTP configuration to avoid misconfigurations and security risks.
