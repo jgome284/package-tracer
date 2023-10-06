@@ -43,6 +43,8 @@ Enter `exit` to leave mode
  - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <NEXT-HOP>` - used to configure a static route on a router. For example, `ip route 192.168.1.0 255.255.255.0 192.168.34.3` would configure the router's 192.168.34.3 port interface as the next hop for all traffic with a destination address of 192.168.1.0/24.
  - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <EXIT-INTERFACE>` - used to configure a static route on the router by pointing to a port interface.
  - `vlan <VLAN #>` - creates a vlan and enables vlan configuration.
+ - `ip routing` - enables layer 3 routing on a multilayer switch.
+ - `no switchport` - configures the interface on a multilayer switch as a layer 3 routed port, not a switchport.
 
  To set a default route to the internet you can use the `ip route` command with the least specific destination ip address, i.e. `ip route 0.0.0.0 0.0.0.0 <SELECT EXIT-INTERFACE or NEXT-HOP IP or both>`
 
@@ -65,15 +67,23 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
 - `switchport access vlan <VLAN #>` - sets switchport to vlan number specified. 
 - `switchport trunk allowed vlan ?` - sets VLANs allowed on trunk port. input`?` to see all options
 - `switchport trunk native vlan <VLAN #>` - changes the native VLAN on the switch. Make sure the native VLAN matches between switches in your network.
+- `default interface <interface number>` - resets setting on the interface.
+- `interface vlan<vlan#>` - for example, `interface vlan10`, sets vlan on SVIs or switch virtual interfaces. 
+    - SVIs are shutdown by default so remember to use `no shutdown` to enable the interface. 
+    - The VLAN must exist on the switch to work. Remember to add the VLAN in global config mode.
+    - The switch must have at least one access port in the VLAN in an up/up state, AND/OR one trunk port that allows the VLAN that is in an up/up state.
+    - The VLAN must not be shutdown (you can use the `shutdown` command to disable a VLAN)
 
 ## Subinterface Config Mode
 To create a *Router on a Stick* (ROAS) you can create subinterfaces by entering subinterface configuration mode. For example, `interface g0/0.10` creates a subinterface 10 on port g0/0... it is highly recommended for the subinterface number to match the VLAN number!
-- `encapsulation dot1q 10` - sets encapsulation mode to 802.1Q on VLAN 10
+- `encapsulation dot1q <vlan-id>` - sets encapsulation mode to 802.1Q on the vlan id provided.
+- `encapsulation dot1q <vlan-id> native` - tells the router that the subinterface belongs to the native VLAN. It will assume that untagged frames belong to the native VLAN. Alternatively, you can also just set the native VLAN on the router's physical interface.
 - `ip address <ADDRESS> <NETMASK>` - sets ip address and net mask on sub interface.
 
 ## VLAN Config Mode
 To enter VLAN configuration mode, you must be in global config mode, then enter `vlan <VLAN #>`. For example, `vlan 1`.
 - `name` - provides name to vlan.
+- `shutdown` - disables the VLAN.
 
 # Configuration
  **Running-Config**
