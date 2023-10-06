@@ -71,11 +71,27 @@ Extended VLANS: 1006-4094
 ## Native VLAN
 The native VLAN is VLAN 1 by default on all trunk ports, however this can be manually configured on each trunk port. The switch does not add an 802.1Q tag to frames in the native VLAN. When a switch receivecs an untagged frame on a trunk port, it assumes the frame belongs to the native VLAN. **it's very important that the native VLAN matches between switches!**
 
-For security purposes, it is best to change the native (default) VLAN to an unused VLAN.
+For security purposes, it is best to change the native (default) VLAN to an unused VLAN. However, using the native VLAN means that frames do not need to be tagged, and therefore it allows devices to send more frames per second.
 
-# Router on a Stick (ROAS)
+
+
+# Inter VLAN Routing
+## Router on a Stick (ROAS)
 ROAS is used to route between multiple VLANs using a single interface on the router and 1 switch. It divides one physical interface between a router and switch into n logical subinterfaces
 
 The switch interface is configured as a regular trunk.
 
 The router interface is configured using **subinterfaces**, which means you configure the VLAN and IP address on each subinterface.
+
+## Multilayer Switching
+Also known as Layer 3 Switching. A multilayer switch is capable of both switching and routing. It is 'layer 3 aware'.
+
+- You can assign IP addresses to a switches interfaces, just like a router.
+- You can also create virtual interfaces for each VLAN, and assign IP addresses to those interfaces.
+- You can configure routes on it, just like a router
+
+**Switch Virtual Interfaces (SVIs)** - are the virtual interfaces you can assign IP addresses to in a multilayer switch. Configure each PC to use the SVI (NOT the router) as their gateway address.
+
+# Dynamic Trunking Protocol (DTP)
+
+# VLAN Trunking Protocol (VTP)
