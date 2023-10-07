@@ -30,6 +30,9 @@ Enter `exit` to leave mode
  - `show vlan brief` - shows VLANs setup on a switch with associated ports. VLANs 1, 1002-1005 exist by default and cannot be deleted.
 - `show interfaces trunk` - shows vlans allowed on trunk port
 - `show vtp status` - displays vtp information
+- `show spanning-tree` - displays STP information
+- `show spanning-tree detail` - displays STP information with more detail, including total root cost
+- `show spanning-tree summary` - display summary of STP info
 
 ## Global Config Mode
  Enter with `configure terminal`
