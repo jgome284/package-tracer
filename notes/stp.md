@@ -38,10 +38,12 @@ Here are the key points about the Spanning Tree Protocol:
 
 **6. Port States:**
    - STP switches have different port states, including:
-     - **Blocking:** Ports in this state do not forward traffic but listen to BPDUs to detect loops.
-     - **Listening:** Ports in this state prepare to forward traffic but still do not.
-     - **Learning:** Ports in this state prepare to forward traffic while learning MAC addresses.
+     - **Blocking:** Ports in this state do not forward traffic but listen to BPDUs to detect loops. They do NOT learn MAC addresses.
+     - **Listening:** Ports in this state prepare to forward regular traffic but still do not. They only forward/receive STP BPDUs. Only designated or root ports enter the listening state. It is 15 seconds long by default and set by the forward delay timer. Ports do NOT learn MAC addresses from regular traffic while in this state.
+     - **Learning:** Ports in this state prepare to forward traffic while learning MAC addresses. Ports enter the learning state after the listening state. This state is 15 seconds long by default and set by the forward delay timer. An interface in the learning state only sends/receives BPDUs, not regular traffic.
      - **Forwarding:** Ports in this state actively forward traffic.
+
+     Listening and Learning are transitional states which are passed through when an interface is activated, or when a Blocking port must transition to a forwarding state due to a change in the network topology.
 
 **7. Convergence:**
    - STP is designed to converge quickly when the network topology changes. When a link failure occurs or a switch is added or removed, STP recalculates the topology to establish a new loop-free path.
@@ -115,3 +117,78 @@ Network redundancy is a design approach in networking that involves creating bac
     - Implementing network redundancy can be complex and may involve additional costs due to the purchase of redundant hardware and increased maintenance efforts. However, the benefits of improved reliability and availability often outweigh these costs.
 
 Network redundancy is essential for ensuring business continuity, particularly in environments where network downtime can result in financial losses or significant disruptions. It is a critical component of designing robust and resilient network architectures.
+
+# STP Timers
+Spanning Tree Protocol (STP) uses several timers to control various aspects of its operation. These timers help ensure network stability, rapid convergence, and loop prevention. Here are the key STP timers and their functions:
+
+1. **Hello Time (2 seconds by default):**
+   - The Hello Time is the interval at which Bridge Protocol Data Units (BPDUs) are sent out on a bridge's designated ports. BPDUs contain information about the bridge's identity and the topology of the network.
+   - BPDUs help switches communicate with each other to detect changes in the network topology and initiate the spanning tree algorithm if necessary.
+   - A lower Hello Time can result in faster network convergence but may increase network overhead.
+
+2. **Forward Delay (15 seconds by default):**
+   - The Forward Delay timer is the time a port spends in the Listening and Learning states before transitioning to the Forwarding state.
+   - It helps prevent temporary loops during network topology changes by allowing time for BPDUs to propagate and bridges to converge.
+   - Reducing the Forward Delay timer can lead to faster convergence but may increase the risk of temporary loops.
+
+3. **Max Age (20 seconds by default):**
+   - The Max Age timer defines the maximum time a switch will wait for a BPDU to arrive before it considers the information about a topology change outdated.
+   - If a switch does not receive BPDUs from a designated bridge within the Max Age interval, it assumes that the designated bridge is no longer operational, and it takes corrective action.
+   - Max Age helps prevent stale information from causing network instability.
+
+4. **Bridge Forward Delay (0 seconds by default):**
+   - Bridge Forward Delay is the delay a bridge introduces before transitioning from the Listening state to the Forwarding state. This timer is not standard in all versions of STP but is used in some variants.
+   - It can be used to stagger the Forwarding state transitions of multiple switches, further reducing the risk of temporary loops during network convergence.
+
+5. **Aging Time (Max Age + Forward Delay by default):**
+   - Aging Time is the total time it takes for a bridge to age out outdated information about network topology changes.
+   - Aging Time is typically set to Max Age plus Forward Delay. When this timer expires, the bridge assumes that topology information is no longer reliable and initiates the spanning tree algorithm if necessary.
+
+These timers collectively contribute to the stability and efficiency of STP by ensuring that network devices communicate and converge in a coordinated manner. Modifying these timers should be done with caution, as it can affect network performance and stability. Generally, the default timer settings are suitable for most network environments, but adjustments may be necessary in specific situations to optimize network behavior.
+
+# STP BPDU
+Bridge Protocol Data Units (BPDUs) are fundamental components of the Spanning Tree Protocol (STP) and its variants. BPDUs are data frames exchanged between network switches to establish and maintain a loop-free topology in Ethernet networks. Here's a detailed explanation of BPDUs:
+
+**1. Purpose of BPDUs:**
+   - BPDUs serve two primary purposes within the context of STP:
+     - To elect a Root Bridge: BPDUs are used to elect a Root Bridge in the network. The Root Bridge serves as the reference point for the STP calculations.
+     - To determine the best path to the Root Bridge: BPDUs contain information about the sender's identity, the path cost to reach the Root Bridge, and the state of the sending switch's ports. This information helps switches calculate the optimal path to reach the Root Bridge and avoid network loops.
+
+**2. BPDU Format:**
+   - BPDUs are encapsulated within Ethernet frames and use the IEEE 802.1Q standard for VLAN tagging. The IEEE 802.1D standard defines the BPDU frame format, which includes fields for the Root Bridge ID, Sender Bridge ID, Root Path Cost, Sender Port ID, and a few others.
+
+   PVST+ Mac address is 01:00:0c:cc:cc:cd
+   Regular STP Mac address is 0180.c200.0000
+
+**3. BPDU Exchange Process:**
+   - BPDUs are exchanged between switches in the following manner:
+     - When a switch is initially powered on or detects a topology change, it begins sending BPDUs out of all its ports (known as the Listening state).
+     - BPDUs are received and forwarded by neighboring switches, which then add their own information to the BPDUs and forward them further.
+     - As BPDUs traverse the network, switches use the information in the BPDUs to determine the Root Bridge, calculate their own path cost to the Root Bridge, and determine which ports should be in the Forwarding state (forwarding traffic) and which should be in the Blocking state (blocking traffic to prevent loops).
+     - The process continues until all switches have received and processed BPDUs, and the network topology converges to a loop-free state.
+
+**4. BPDU Timers:**
+   - BPDUs are sent periodically by switches to ensure that the network topology remains up to date. The Hello Time timer determines the interval at which BPDUs are sent (usually every 2 seconds by default).
+   - If a switch stops receiving BPDUs from a neighboring switch for an extended period (as determined by the Max Age timer), it assumes that the neighboring switch has failed or the network topology has changed.
+
+**5. VLAN-Specific BPDUs (PVST and PVST+):**
+   - In Cisco's Per-VLAN Spanning Tree (PVST) and Per-VLAN Spanning Tree Plus (PVST+), separate BPDUs are generated and processed for each VLAN. This allows switches to calculate a spanning tree topology per VLAN, optimizing network resource usage.
+
+In summary, BPDUs are the heart of the Spanning Tree Protocol. They carry critical information about the network's topology, including the identity of the Root Bridge, path costs, and port states. By exchanging BPDUs and making decisions based on their content, switches collaboratively create a loop-free Ethernet network that ensures network stability and prevents broadcast storms and packet flooding caused by loops.
+
+# STP Optional Features
+## Portfast
+allows a port to move immediately to the forwarding state, bypassing listening and learning. If used, it must be enabled only on ports connected to end hosts. If enabled on a port connected to another switch it could cause a layer 2 loop.
+
+## Root Guard
+If you enable root guard on an interface, even if it receives a superior BPDU (lower bridge ID) on that interface, the switch will not accept the new switch as the root bridge. The interface will be disabled.
+
+## Loop Guard
+If you enable loop guard on an interface, even if the interface stops receiving BPDUs, it will not start forwarding. The interface will be disabled.
+
+# STP Load-Balancing
+There are two main ways to configure STP load-balancing:
+
+**VLAN-based STP load-balancing:** This type of STP load-balancing uses VLANs to distribute traffic across multiple links. Each VLAN is assigned to a different spanning tree, and each spanning tree uses a different set of links. This allows traffic from different VLANs to be distributed across different links.
+
+**Port-based STP load-balancing:** This type of STP load-balancing uses port priorities to distribute traffic across multiple links. Ports with higher priorities are more likely to be selected for the spanning tree. This allows traffic to be distributed across the links with the highest priorities.
