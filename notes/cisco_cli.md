@@ -52,6 +52,13 @@ Enter `exit` to leave mode
  - `no switchport` - configures the interface on a multilayer switch as a layer 3 routed port, not a switchport.
  - `vtp domain <NAME>` - sets vtp domain name on switch. If a switch with no VTP domain (domain NULL) receives a VTP advertisement with a VTP domain name, it will automatically join that VTP domain. Changing the VTP domain to an unused domain will reset the revision number to 0.
  - `vtp mode ?` - sets vtp mode on switch... valid commands are `server`, `client`, and `transparent`. If `transparent` is selected, the revision number is set back to 0.
+ - `spanning-tree portfast default` - enables portfast on all access ports (not trunk ports), if used enabling bpduguard on interfaces is also recommended.
+ - `spanning-tree portfast bpduguard default` - enables BPDU guard on all portfast-enabled interfaces.
+ - `spanning-tree mode ?` - can set STP mode to either `mst` (multiple spanning tree), `pvst` (per vlan spanning tree), or `rapid-pvst` (per vlan rapid spanning tree).
+ - `spanning-tree vlan <vlan-number> root primary` - sets the STP priority to 24576 on the vlan number selected. If another switch has a priority lower than 24576, it sets this switch's priority to 4096 less than the other switch's priority.
+ - `spanning-tree vlan <vlan-number> root secondary` - sets the STP priority to secondary on the vlan number selected.
+ - `spanning-tree vlan <vlan-number> cost` - change an interface's per VLAN spanning tree path cost
+ - `spanning-tree vlan <vlan-number> port-priority` - change an interface's spanning tree port priority.
 
  To set a default route to the internet you can use the `ip route` command with the least specific destination ip address, i.e. `ip route 0.0.0.0 0.0.0.0 <SELECT EXIT-INTERFACE or NEXT-HOP IP or both>`
 
@@ -90,6 +97,9 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
     - The VLAN must exist on the switch to work. Remember to add the VLAN in global config mode.
     - The switch must have at least one access port in the VLAN in an up/up state, AND/OR one trunk port that allows the VLAN that is in an up/up state.
     - The VLAN must not be shutdown (you can use the `shutdown` command to disable a VLAN)
+- `span vlan <vlan-number> cost <cost>` - adjust vlan cost of interface.
+- `spanning-tree portfast` - enables portfast on the interface (recommended only for end hosts)
+- `spanning-tree bpduguard enable` - if an interface with BPDU guard enabled receives a BPDU from another switch, the interface will be shut down to prevent a loop from forming.
 
 ## Subinterface Config Mode
 To create a *Router on a Stick* (ROAS) you can create subinterfaces by entering subinterface configuration mode. For example, `interface g0/0.10` creates a subinterface 10 on port g0/0... it is highly recommended for the subinterface number to match the VLAN number!
