@@ -33,6 +33,9 @@ Enter `exit` to leave mode
 - `show spanning-tree` - displays STP information
 - `show spanning-tree detail` - displays STP information with more detail, including total root cost
 - `show spanning-tree summary` - display summary of STP info
+- `show etherchannel load-balance` - display the etherchannel load-balance configuration
+- `show etherchannel port-channel` - display port-channel/etherchannel information including number of ports, protocol, channel group mode, etc.
+- `show etherchannel summary` - displays information about etherchannels on switch.
 
 ## Global Config Mode
  Enter with `configure terminal`
@@ -49,8 +52,7 @@ Enter `exit` to leave mode
  - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <EXIT-INTERFACE>` - used to configure a static route on the router by pointing to a port interface.
  - `vlan <VLAN #>` - creates a vlan and enables vlan configuration.
  - `ip routing` - enables layer 3 routing on a multilayer switch.
- - `no switchport` - configures the interface on a multilayer switch as a layer 3 routed port, not a switchport.
- - `vtp domain <NAME>` - sets vtp domain name on switch. If a switch with no VTP domain (domain NULL) receives a VTP advertisement with a VTP domain name, it will automatically join that VTP domain. Changing the VTP domain to an unused domain will reset the revision number to 0.
+  - `vtp domain <NAME>` - sets vtp domain name on switch. If a switch with no VTP domain (domain NULL) receives a VTP advertisement with a VTP domain name, it will automatically join that VTP domain. Changing the VTP domain to an unused domain will reset the revision number to 0.
  - `vtp mode ?` - sets vtp mode on switch... valid commands are `server`, `client`, and `transparent`. If `transparent` is selected, the revision number is set back to 0.
  - `spanning-tree portfast default` - enables portfast on all access ports (not trunk ports), if used enabling bpduguard on interfaces is also recommended.
  - `spanning-tree portfast bpduguard default` - enables BPDU guard on all portfast-enabled interfaces.
@@ -59,6 +61,8 @@ Enter `exit` to leave mode
  - `spanning-tree vlan <vlan-number> root secondary` - sets the STP priority to secondary on the vlan number selected.
  - `spanning-tree vlan <vlan-number> cost` - change an interface's per VLAN spanning tree path cost
  - `spanning-tree vlan <vlan-number> port-priority` - change an interface's spanning tree port priority.
+ - `interface port-channel <#>` - creates etherchannel/portchannel interface.
+ - `port-channel load-balance ?` - change the etherchannel load-balance configuration to the displayed options.
 
  To set a default route to the internet you can use the `ip route` command with the least specific destination ip address, i.e. `ip route 0.0.0.0 0.0.0.0 <SELECT EXIT-INTERFACE or NEXT-HOP IP or both>`
 
@@ -75,6 +79,7 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
 - `description <YOUR DECRIPTION> | desc <YOUR DECRIPTION>` - used to add interface description.
 - `speed <SPEED>` - sets interface speed: 10, 100, auto, etc.
 - `duplex <DUPLEX>` - sets interface duplex: auto, full, half.
+- `no switchport` - configures the interface on a multilayer switch as a layer 3 routed port, i.e. not a switchport.
 - `switchport mode access` - sets interface as an access port, a switchport which belongs to a single VLAN, and usually connects to end hosts like PCs.
 - `switchport mode trunk` - sets interface as an trunk port, a switchport which belongs to multiple VLANs. Before this works, the trunk encapsulation must be set to 802.1Q or ISL. However, on switches that only support 802.1Q, this is not necessary. By default all VLANs are allowed on the trunk.
 - `switchport mode dynamic` - sets mode to dynamically negotiate access or trunk mode
@@ -100,7 +105,9 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
 - `span vlan <vlan-number> cost <cost>` - adjust vlan cost of interface.
 - `spanning-tree portfast` - enables portfast on the interface (recommended only for end hosts)
 - `spanning-tree bpduguard enable` - if an interface with BPDU guard enabled receives a BPDU from another switch, the interface will be shut down to prevent a loop from forming.
-
+- `channel-group <#> mode ?` - provides configuration options for an etherchannel. The channel-group number has to match for member interfaces on the same switch. However, it doesn't have to match the channel-group number on the other switch
+- `channel-protocol ?` - provides manual configuration options for etherchannel protocol... this command is not very useful considering this is already done automatically when you select the `channel-group <#> mode`. 
+  
 ## Subinterface Config Mode
 To create a *Router on a Stick* (ROAS) you can create subinterfaces by entering subinterface configuration mode. For example, `interface g0/0.10` creates a subinterface 10 on port g0/0... it is highly recommended for the subinterface number to match the VLAN number!
 - `encapsulation dot1q <vlan-id>` - sets encapsulation mode to 802.1Q on the vlan id provided.
