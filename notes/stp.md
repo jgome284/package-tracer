@@ -1,4 +1,4 @@
-# Spanning Tree Protocol (STP)
+# Classic Spanning Tree Protocol (STP)
 The Spanning Tree Protocol (STP), aka "Classic Spanning Tree Protocol", is a network protocol used to prevent infinite loops in Ethernet networks, which can lead to broadcast storms and network instability. At the same time, STP is important to enable network redundancy in layer two devices. STP is part of the IEEE 802.1D standard and is designed to ensure that a single, loop-free path exists in a network, while blocking redundant paths.
 
 ![Spanning Tree Protocol](images\spanning-tree-protocol.png)
@@ -36,7 +36,7 @@ Here are the key points about the Spanning Tree Protocol:
 **5. Path Cost:**
    - The cost of a path between two switches is calculated based on the link's bandwidth. Higher bandwidth links have lower costs. STP chooses the path with the lowest cumulative cost to reach the Root Bridge.
 
-**6. Port States:**
+**6. Port States:** (*Classic Spanning Tree Protocol*)
    - STP switches have different port states, including:
      - **Blocking:** Ports in this state do not forward traffic but listen to BPDUs to detect loops. They do NOT learn MAC addresses.
      - **Listening:** Ports in this state prepare to forward regular traffic but still do not. They only forward/receive STP BPDUs. Only designated or root ports enter the listening state. It is 15 seconds long by default and set by the forward delay timer. Ports do NOT learn MAC addresses from regular traffic while in this state.
@@ -44,6 +44,23 @@ Here are the key points about the Spanning Tree Protocol:
      - **Forwarding:** Ports in this state actively forward traffic.
 
      Listening and Learning are transitional states which are passed through when an interface is activated, or when a Blocking port must transition to a forwarding state due to a change in the network topology.
+**7. Port Roles:**
+**Root Port:**
+   - A Root Port is the switch port on a non-root switch that provides the best path to reach the Root Bridge.
+   - Each non-root switch has exactly one Root Port, which is the port with the lowest cost to the Root Bridge.
+   - The Root Port is in the Forwarding state, allowing traffic to flow through it.
+
+**Designated Port:**
+   - A Designated Port is a switch port that is part of the Root Bridge's forwarding path for a specific segment or LAN.
+   - On each network segment (e.g., an Ethernet segment), one switch is elected as the Designated Bridge (usually the switch with the lowest Bridge ID).
+   - The switch with the Designated Port on that segment sends and receives traffic for that segment.
+   - Designated Ports are also in the Forwarding state.
+
+**Blocking Port:**
+   - A Blocking Port is a switch port that is not forwarding traffic but is actively listening to Bridge Protocol Data Units (BPDUs).
+   - Blocking Ports are part of the loop prevention mechanism in STP and are used to prevent loops from forming.
+   - They are essentially ports that are turned off for data traffic but are on for STP-related communication.
+   - The Blocking state is a transitional state that ports go through before moving to the Forwarding state.
 
 **7. Convergence:**
    - STP is designed to converge quickly when the network topology changes. When a link failure occurs or a switch is added or removed, STP recalculates the topology to establish a new loop-free path.
@@ -57,7 +74,6 @@ Here are the key points about the Spanning Tree Protocol:
 STP is an essential protocol for network stability in Ethernet-based LANs. It ensures that network loops are avoided, and a single active path is established, preventing issues like broadcast storms and packet flooding. Network administrators should be familiar with STP and its variants to configure and manage networks effectively.
 
 # Broadcast Storms
-
 A broadcast storm is an abnormally high number of broadcast and multicast packets within a short period of time. Broadcast storms can occur when a device on a network sends a broadcast packet and all of the other devices on the network receive and forward the packet. This can cause a chain reaction, with each device forwarding the packet to all of the other devices on the network. This can quickly overwhelm the network and cause performance problems or even network outages.
 
 There are a number of things that can cause broadcast storms, including:
@@ -192,3 +208,61 @@ There are two main ways to configure STP load-balancing:
 **VLAN-based STP load-balancing:** This type of STP load-balancing uses VLANs to distribute traffic across multiple links. Each VLAN is assigned to a different spanning tree, and each spanning tree uses a different set of links. This allows traffic from different VLANs to be distributed across different links.
 
 **Port-based STP load-balancing:** This type of STP load-balancing uses port priorities to distribute traffic across multiple links. Ports with higher priorities are more likely to be selected for the spanning tree. This allows traffic to be distributed across the links with the highest priorities.
+
+# Rapid Spanning-Tree Protocol
+Rapid Spanning Tree Protocol (RSTP) is an improvement over the Spanning Tree Protocol (STP) and provides faster convergence time, enhanced network stability, and reduced downtime. Spanning Tree Costs were updated with RSTP to include up to 1Tbps speeds. Additionally, in rapid STP, ALL switches originate and send their own BPDUs from their designated ports. Switches also age the BPDU information much more quickly; if a neighboring connection is lost, and the switch misses 3 BPDUs (6 seconds). It will flush all MAC addresses learned on that interface.
+
+RSTP convergence time is much because RSTP uses a number of features to accelerate convergence, such as:
+
+**Proposal/agreement:** RSTP uses a proposal/agreement mechanism to quickly negotiate the spanning tree topology between bridges. The new bridge-bridge handshake mechanism, allows ports to move directly to forwarding as opposed to waiting on the timers in classic STP.
+
+**Port states:** RSTP uses a different set of port states than STP. These port states allow bridges to quickly transition to the forwarding state after a topology change. Rapid Spanning Tree Protocol (RSTP) has three port states:
+
+- **Discarding:** This is the initial state of all ports. In this state, the port does not send or receive any traffic.
+- **Learning:** In this state, the port is learning the MAC addresses of the devices on the connected network segment. The port does not forward any traffic during this state.
+- **Forwarding:** In this state, the port is forwarding traffic between the connected devices.
+
+**Link Types**
+- **point-to-point:** 
+    - link type between switches
+    - full duplex connection
+- **edge**
+    - on connections to end host
+    - type of connection with portfast enabled so there is no negotiation to move to the forwarding state.
+- **shared**
+    - for half duplex connections
+    - typically used for connections to hubs
+
+**Port Roles**
+The Rapid Spanning Tree Protocol (RSTP), defined by IEEE 802.1w, simplifies and accelerates the Spanning Tree Protocol (STP) convergence process. While RSTP retains some of the classic STP port roles, it introduces a few new ones to improve network convergence and efficiency. Here are the port roles in RSTP:
+
+**1. Root Port:**
+   - Similar to classic STP, the Root Port is the port on a non-root switch that provides the best path to reach the Root Bridge.
+   - Each non-root switch has exactly one Root Port, which is the port with the lowest cost to the Root Bridge.
+   - The Root Port is in the Forwarding state, allowing traffic to flow through it.
+
+**2. Designated Port:**
+   - Like classic STP, a Designated Port is a switch port that is part of the Root Bridge's forwarding path for a specific segment or LAN.
+   - On each network segment (e.g., an Ethernet segment), one switch is elected as the Designated Bridge (usually the switch with the lowest Bridge ID).
+   - The switch with the Designated Port on that segment sends and receives traffic for that segment.
+   - Designated Ports are also in the Forwarding state.
+
+**3. Alternate Port (RSTP-Specific):**
+   - An Alternate Port is a port that provides a backup path to reach the Root Bridge.
+   - Alternate Ports are introduced in RSTP to speed up network convergence by having a port that is ready to transition to the Forwarding state if the Root Port fails.
+   - When the Root Port fails, the Alternate Port transitions to the Forwarding state without waiting for timers to expire, reducing downtime.
+
+**4. Backup Port (RSTP-Specific):**
+   - A Backup Port is similar to an Alternate Port, providing a backup path to the Root Bridge.
+   - However, Backup Ports are used in cases where multiple switches are connected in a ring topology, and one switch is designated as the "backup" for the ring.
+   - If a failure occurs in the ring, the Backup Port becomes a part of the new active path, ensuring loop-free operation.
+   
+**5. Edge ports:** 
+   - RSTP edge ports can quickly transition to the forwarding state without the need for any negotiation with other bridges.
+
+RSTP is a widely supported protocol and is used by most Ethernet switches. It is a good choice for networks that require fast convergence time and high availability.
+
+
+# Multiple Spanning Tree Protocol
+- Uses modified RSTP mechanics
+- Can group multiple VLANs into different instances (i.e. VLANS 1-5 in instance 1, VLANs 6-10 in instance 2) to perform load balancing.
