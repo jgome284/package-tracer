@@ -24,7 +24,7 @@ Link state algorithms work by flooding the network with information about the st
 
 An Interior Gateway Protocol (IGP) is a dynamic routing protocol that is used to exchange routing information within a single autonomous system (AS). An AS is a group of networks that are under the control of a single administrative entity. IGPs use a variety of algorithms to find the best path to a destination within the AS. Some common IGPs include:
 - RIP (Routing Information Protocol), which uses the Distance Vector Algorithm type.
-- EIGRP (Enhanced Interior Gateway Routing Protocol, which uses the Distance Vector Algorithm type. (Cisco Proprietary)
+- EIGRP (Enhanced Interior Gateway Routing Protocol), which uses the Distance Vector Algorithm type. (Cisco Proprietary)
 - OSPF (Open Shortest Path First), which uses the Link State Algorithm type.
 - IS-IS (Intermediate System to Intermediate System) which uses the Link State Algorithm type.
 
