@@ -4,7 +4,7 @@ Routing is the process of forwarding packets from one network to another. Router
 
 A **route** tells the router: to send a packet to destination X, you should send the packet to next-hop Y. Or, if the destination is the router's own IP address, receive the packet for yourself (don't forward it).
 
-A **connected route** is a route to the network the interface is connected to. It provides a route to all hosts in that network.
+A **connected route** is a route to the network the interface is connected to. It provides a route to all hosts in that network. This is also known as a network/subnet route, it has a mask length < /32.
 
 A **local route** is a route to the exact IP address configured on the interface. A /32 netmask is used to specify the exact IP address of the interface. 
 
