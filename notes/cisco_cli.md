@@ -36,6 +36,9 @@ Enter `exit` to leave mode
 - `show etherchannel load-balance` - display the etherchannel load-balance configuration
 - `show etherchannel port-channel` - display port-channel/etherchannel information including number of ports, protocol, channel group mode, etc.
 - `show etherchannel summary` - displays information about etherchannels on switch.
+- `show ip protocols` - shows the dynamic routing protocol currently in place, its message timers, version, the maximum number of paths allowed between destinations for load balancing.
+- `show ip eigrp neighbors` - displays eigrp neighbors 
+- `show ip eigrp topology` - displays detailed information about eigrp topology
 
 ## Global Config Mode
  Enter with `configure terminal`
@@ -63,13 +66,16 @@ Enter `exit` to leave mode
  - `spanning-tree vlan <vlan-number> port-priority` - change an interface's spanning tree port priority.
  - `interface port-channel <#>` - creates etherchannel/portchannel interface.
  - `port-channel load-balance ?` - change the etherchannel load-balance configuration to the displayed options.
-
+ - `router rip`
+ - `version 2`
  To set a default route to the internet you can use the `ip route` command with the least specific destination ip address, i.e. `ip route 0.0.0.0 0.0.0.0 <SELECT EXIT-INTERFACE or NEXT-HOP IP or both>`
 
 To cancel commands, use `no` before the command of interest. For example, to avoid future passwords from automatically being encrypted, run `no service password-encryption`. 
 
 ## Interface Config Mode
 To enter interface configuration mode, you must be in global config mode, then enter `interface <INTERFACE NAME>` | `in <INTERFACE NAME>`. For example, `interface gigabitethernet 0/0` | `in g0/0`.
+
+You can also create loop back interfaces. For example `interface loopback <number` | `int l <#>`, this creates a loop back interface of the specified number that can be configured like any other interface.
 
 To configure several interfaces all at once, type `interface range <INTERFACE START> - <INTERFACE END>`
 
@@ -115,9 +121,50 @@ To create a *Router on a Stick* (ROAS) you can create subinterfaces by entering 
 - `ip address <ADDRESS> <NETMASK>` - sets ip address and net mask on sub interface.
 
 ## VLAN Config Mode
-To enter VLAN configuration mode, you must be in global config mode, then enter `vlan <VLAN #>`. For example, `vlan 1`.
+To enter VLAN configuration mode, you must be in global config mode, then enter `vlan <VLAN #>`. Fo,. example, `vlan 1`.
 - `name` - provides name to vlan.
 - `shutdown` - disables the VLAN.
+
+## RIP Config Mode
+To enter RIP configuration mode, you must be in global config mode, then enter `router rip`. 
+- `version 2` - configures to router to use RIPv2
+- `no auto-summary` - auto-summary is on by default, and it automatically turns the networks the router is connected with to classful-networks, which are used on RIPv1... this is not something you want so turning it off is necessary to use RIPv2 which is typical in modern networks.
+- `network <IP address>` - The RIP 'network' command is classful, it will automatically convert to classful networks. For example, even if you enter the command network 10.0.12.0, it will be converted to network 10.0.0.0 (a class A network). Because of this behavior, there is no need to enter the network mask. The network command tells the router to:
+    - look for interfaces with an IP address that is in the specified range.
+    - activate RIP on the interfaces that fall into that range.
+    - Form adjacencies with connected RIP neighbors
+    - advertise the network prefix of the interface (NOT the prefix in the network command)
+    - note: the OSPF and EIGRP network commands operate in the same way.
+    - if there are no RIP neighbors connected to an interface, the router will still continue to send RIP advertisements. This is unnecessary traffic, that is unless the interface is configured as a **passive-interface**.
+- `passive-interface <interface id>` - configures interface as passive, for example 'passive-interface g2/0'. It tells the router to stop sending RIP advertisements out of the specified interface. However, the router will still continue to advertise the network prefix of the interface to its RIP neighbors on active RIP interfaces. EIGRP and OSPF both have the same passive interface functionality, using the same command.
+- `default-information originate` - advertises default gateway information to other routers, for example when you want a router to advertise its access point to the internet.
+- `maximum-paths <number>` - sets the maximum number of paths allowed between two destinations for load balancing, for example 'maximum-paths 4' sets a maximum number of 4 paths available between routers for load balancing. 
+- `distance <number>` - overrides the default administrative distance for RIP configuration mode.
+
+## EIGRP Config Mode
+To enter EIGRP configuration mode, you must be in global config mode, then enter `router eigrp <Autonomous System #>`. For example, 'router eigrp 1'. The AS (autonomous system) number must match between routers, or they will not form an adjacency and share route information.
+- `no auto-summary` - auto-summary may or may not be on by default, but it automatically turns the networks the router is connected with to classful-networks... this is not something you want on modern networks so making sure to turn it off is typical.
+- `network <IP address> <wildcard mask>` - The EIGRP 'network' command is classful unless you provide a wildcard mask that enables EIGRP on a specific interface. A wildcard mask is basically an 'inverted' subnet mask. All 1s in the subnet mask are 0 in the equivalent wildcard mask. All 0s in the subnet mask are 1 in the equivalent wildcard mask. 
+    - A '0' in the wildcard mask = must match. 
+    - A '1' in the wildcard mask = don't have to match.
+    - Note: to enable EIGRP on all interfaces, you can run `network 0.0.0.0 255.255.255.255`
+
+If you enter the command 'network 10.0.12.0', it will be converted to network 10.0.0.0 (a class A network) and grab interfaces with ip addresses like 10.0.12.0 and 10.0.7.0 if they exist, for example. The network command tells the router to:
+    - look for interfaces with an IP address that is in the specified range (without a mask) or the specific IP address (with mask).
+    - activate EIGRP on the interface with the specified IP (with mask) or interfaces that fall into the classful range (without mask).
+    - Form adjacencies with connected EIGRP neighbors
+    - advertise the network prefix of the interface (NOT the prefix in the network command)
+    - note: the OSPF and EIGRP network commands operate in the same way.
+    - if there are no EIGRP neighbors connected to an interface, the router will still continue to send EIGRP advertisements. This is unnecessary traffic, that is unless the interface is configured as a **passive-interface**.
+
+- `passive-interface <interface id>` - configures interface as passive, for example 'passive-interface g2/0'. It tells the router to stop sending EIGRP advertisements out of the specified interface. However, the router will still continue to advertise the network prefix of the interface to its EIGRP neighbors on active EIGRP interfaces. EIGRP and OSPF both have the same passive interface functionality, using the same command.
+- `default-information originate` - advertises default gateway information to other routers, for example when you want a router to advertise its access point to the internet.
+- `maximum-paths <number>` - sets the maximum number of paths allowed between two destinations for load balancing, for example 'maximum-paths 4' sets a maximum number of 4 paths available between routers for load balancing. 
+- `distance <number>` - overrides the default administrative distance for EIGRP configuration mode.
+- `eigrp router-id <32 bit number>` - configure a EIGRP router id, for example, 'eigrp router-id 1.1.1.1' 
+- `variance <multiplier>` - if variance is set to 1, EIGRP will use ECMP (Equal Cost Multi-Path) load-balancing. Otherwise, if 'variance 2' is used, feasible successor routes with an FD (feasible distance) up to 2x the successor route's FD can be used to load-balance. 
+    - EIGRP will only perform unequal-cost load-balancing over feasible successor routes.
+    - If a route doesn't meet the feasibility requirement, it will NEVER be selected for load-balancing, regardless of variance.
 
 # Configuration
  **Running-Config**
