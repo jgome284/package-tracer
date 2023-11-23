@@ -23,10 +23,37 @@ Link state algorithms work by flooding the network with information about the st
 ![image](https://github.com/jgome284/package-tracer/assets/30394024/bcc23fb8-a43e-458d-8dd8-d12ba24ec737)
 
 An Interior Gateway Protocol (IGP) is a dynamic routing protocol that is used to exchange routing information within a single autonomous system (AS). An AS is a group of networks that are under the control of a single administrative entity. IGPs use a variety of algorithms to find the best path to a destination within the AS. Some common IGPs include:
-- RIP (Routing Information Protocol), which uses the Distance Vector Algorithm type.
+- RIP (Routing Information Protocol), which uses the Distance Vector Algorithm type. 
 - EIGRP (Enhanced Interior Gateway Routing Protocol), which uses the Distance Vector Algorithm type. (Cisco Proprietary)
 - OSPF (Open Shortest Path First), which uses the Link State Algorithm type.
 - IS-IS (Intermediate System to Intermediate System) which uses the Link State Algorithm type.
+
+#### RIP
+- Uses routing-by-rumor logic. (Distance vector IGP)
+- Uses hop count as its metric. The maximum hop count is 15. (bandwidth is irrelevant)
+- Has three versions 
+    - RIPv1: used for IPv4, only support classful addresses, i.e. class A, B, C...
+    - RIPv2: used for IPv4, supports VLSM, CIDR, and provides subnet mask info in its advertisements, messages are multicast to 224.0.0.9. Multicast messages are delivered to devices that have joined that specific multicast group.
+    - RIPng: used for IPV6
+- Has two message types, **Request**, to ask RIP-enabled neighbor routers to send their routing table, and **Response**, to send the local router's routing table to neighboring routers. 
+- By default RIP-enabled routers will share their routing table every 30 seconds.
+
+#### EIGRP
+- Was Cisco proprietary, but Cisco has now published it openly so other vendors can implement it on their equipment.
+- Considered an 'advanced' / 'hybrid' distance vector routing protocol.
+- Much faster than RIP in reacting to changes in the network.
+- Does not have the 15 'hop count' limit of RIP.
+- Sends messages using mulicast address 224.0.0.10.
+- is the only IGP that can perform unequal-cost load-balancing (by default it performs ECMP load-balancing over 4 paths like RIP)
+
+By Default EIGRP uses **bandwidth** and **delay** to calculate metric. The formula is complex, including several K constants that are either 1 or 0 by default. That is K1 = 1, K2 = 0, K3 = 1, K4, = 0, and K5 = 0. The formula in simple terms is bandwidth (of the slowest link) + delay (of all links). The metric reported for EIGRP is provided as both **feasible distance** and **reported distance**. 
+    - The **feasible distance** = the router's metric value to the route's destination.
+    - The **reported distance** (aka *Advertised distance*) = the neighbor's metric value to the route's destination.
+
+These terms are important because they are used to determine the best and alternate routes. 
+    - The **successor** = the route with the lowest metric to the destination (the best route)
+    - The **feasible successor** = an alternate route to the destination (not the best route) __which meets the feasibility condition__
+    - The **feasibility condition**: is a route which is considered a **feasible successor** if its **reported distance** is lower than the successor route's **feasible distance**. If this condition is not met, the network is at risk for loops.
 
 ### EGP (Exterior Gateway Protocol)
 An Exterior Gateway Protocol (EGP) is a dynamic routing protocol that is used to exchange routing information between different ASes. EGPs use a variety of algorithms to find the best path to a destination outside of the AS. The most common EGP is BGP (Border Gateway Protocol) which uses the Path Vector algorithm.
