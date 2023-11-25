@@ -166,6 +166,24 @@ If you enter the command 'network 10.0.12.0', it will be converted to network 10
     - EIGRP will only perform unequal-cost load-balancing over feasible successor routes.
     - If a route doesn't meet the feasibility requirement, it will NEVER be selected for load-balancing, regardless of variance.
 
+## OSPF Config Mode
+To enter OSPF configuration mode, you must be in global config mode, then enter `router ospf <Process ID>`. For example, 'router ospf 1'. The OSPF process ID is **locally significant**. Routers with different process IDs can become OSPF neighbors. A router can run several OSPF processes. The OSPF network command requires you to specify the area as well.
+- `network <IP address> <wildcard mask> <area #>` - A wildcard mask is basically an 'inverted' subnet mask. All 1s in the subnet mask are 0 in the equivalent wildcard mask. All 0s in the subnet mask are 1 in the equivalent wildcard mask. 
+    - A '0' in the wildcard mask = must match. 
+    - A '1' in the wildcard mask = don't have to match.
+    - Note: to enable OSPF on all interfaces, you can run `network 0.0.0.0 255.255.255.255 area 0`
+
+The network command tells the router to:
+    - look for any interfaces with an IP address that is in the specified range to activate OSPF in the area specified.
+    - Form adjacencies with connected OSPF neighbor and advertise the network prefix of the interface
+    - if there are no OSPF neighbors connected to an interface, the router will still continue to send OSPF 'hello' messages. This is unnecessary traffic, that is unless the interface is configured as a **passive-interface**.
+
+- `passive-interface <interface id>` - configures interface as passive, for example 'passive-interface g2/0'. It tells the router to stop sending OSPF 'hello' messages out of the specified interface. However, the router will still continue to send LSAs informing it's neighbors about the subnect configured on the passive interface.
+- `default-information originate` - advertises default gateway information to other routers, for example when you want a router to advertise its access point to the internet. By using this command the router becomes an ASBR, or autonomous system boundary router.
+- `maximum-paths <number>` - sets the maximum number of paths allowed between two destinations for load balancing, for example 'maximum-paths 4' sets a maximum number of 4 paths available between routers for load balancing. 
+- `distance <number>` - overrides the default administrative distance for OSPF configuration mode.
+- `router-id <32 bit number>` - configure a OSPF router id, for example, 'router-id 1.1.1.1'... note that you will likely have to reload or use `clear ip ospf process` command, for this to take effect.
+
 # Configuration
  **Running-Config**
  Configuration for changes made during runtime
