@@ -39,6 +39,9 @@ Enter `exit` to leave mode
 - `show ip protocols` - shows the dynamic routing protocol currently in place, its message timers, version, the maximum number of paths allowed between destinations for load balancing.
 - `show ip eigrp neighbors` - displays eigrp neighbors 
 - `show ip eigrp topology` - displays detailed information about eigrp topology
+- `show ip ospf database` - shows ospf database summary
+- `show ip ospf neighbor` - displays ospf neightbor list
+- `show ip ospf interface` - display ospf interface information
 
 ## Global Config Mode
  Enter with `configure terminal`
@@ -66,8 +69,7 @@ Enter `exit` to leave mode
  - `spanning-tree vlan <vlan-number> port-priority` - change an interface's spanning tree port priority.
  - `interface port-channel <#>` - creates etherchannel/portchannel interface.
  - `port-channel load-balance ?` - change the etherchannel load-balance configuration to the displayed options.
- - `router rip`
- - `version 2`
+
  To set a default route to the internet you can use the `ip route` command with the least specific destination ip address, i.e. `ip route 0.0.0.0 0.0.0.0 <SELECT EXIT-INTERFACE or NEXT-HOP IP or both>`
 
 To cancel commands, use `no` before the command of interest. For example, to avoid future passwords from automatically being encrypted, run `no service password-encryption`. 
