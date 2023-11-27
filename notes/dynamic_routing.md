@@ -12,9 +12,9 @@ The Distance Vector Algorithm use a metric, such as the number of hops or the to
 Distance vector algorithms work by assigning a cost to each link in the network. The cost of a link is typically a measure of the delay or congestion on the link. Routers using distance vector algorithms exchange routing tables with their neighbors, and each router uses this information to update its own routing table. The routing table contains the best known path to each destination, and the best path is the path with the lowest cost.
 
 ### Link State Algorithm
-The Link state algorithm floods the network with information about the state of each link, including whether the link is up or down and the cost of using the link. Routers using link state protocols use this information to calculate the shortest path to each destination.
+Link state algorithms work by flooding the network with information about the state of each link, including whether the link is up or down and the cost of using the link. Routers using link state algorithms use this information to calculate the shortest path to each destination. The shortest path is the path with the fewest hops, and each hop is assumed to have the same cost.
 
-Link state algorithms work by flooding the network with information about the state of each link, including whether the link is up or down and the cost of using the link. Routers using link state algorithms use this information to calculate the shortest path to each destination. The shortest path is the path with the fewest hops, and each hop is assumed to have the same cost. Link state protocols tend to be faster in reacting to changes in the network than distance vector protocols. They also use more CPU on the router because more information is shared.
+When using this type of dynamic routing protocol, every router creates a 'connectivity map' of the network. To allow this, each router advertises information about its interfaces (connected networks) to its neighbors. These advertisements are passed along to other routers, until all routers in the network develop the same map of the network. Each router independently uses this map to calculate the best routes to each destination. Due to this, link state protocols use more resources (CPU) on the router, because more information is shared. However, they tend to be faster in reacting to changes in the network than distance vector protocols.
 
 ## Dynamic Routing Protocols
 ![image](https://github.com/jgome284/package-tracer/assets/30394024/fa51ef33-2076-461c-9589-95c484dbe539)
@@ -54,6 +54,37 @@ These terms are important because they are used to determine the best and altern
     - The **successor** = the route with the lowest metric to the destination (the best route)
     - The **feasible successor** = an alternate route to the destination (not the best route) __which meets the feasibility condition__
     - The **feasibility condition**: is a route which is considered a **feasible successor** if its **reported distance** is lower than the successor route's **feasible distance**. If this condition is not met, the network is at risk for loops.
+
+#### OSPF
+- Open Shortest Path First (OSPF) is a link state routing protocol that support equal cost load balancing.
+- Uses the shortest path first algorithm of Dutch computer scientist Edsger Dijkstra, thus OSPF is also known as Disjkstra's algorithm.
+- There are three versions:
+    - OSPFv1 (1989): OLD, not in use anymore...
+    - OSPFv2 (1998): Used for IPv4
+    - OSPFv3 (2008): Used for IPv6 (can also be used for IPv4, but usually v2 is used)
+- Routers store information about the network in **LSAs** (link state advertisements), which are organized in a structure called the **LSDB** (link state database).
+    - LSA's include: RID (router ID), IP (advertised network address), Cost (OSPF metric)
+    - Each routers uses the SPF algorithm to calculate its best route to each LSA added to the LSDB.
+    - Routers will **flood** LSAs until all routers in the OSPF area develop the same map of the network (LSDB).
+    - Each LSA has an aging timer (30 minutes by default). The LSA will be flooed again after the timer expires.
+- OSPF uses areas to divide up the network. An area is a set of routers and links that share the same LSDB. OSPF areas must be contiguous, devices in an area
+    - There is a **backbone area** (Area 0) by which all other area's have to connect to, e.g. Area 1, 2, 3, etc...
+    - OSPF interfaces in the same subnet must be in the same area.
+    - Routers connected to the backbone area are called **backbone routers**
+    - Routers with all interfaces in the same area are called **internal routers**
+    - Routers with interfaces in multiple areas are called **area border routers** (ABRs)
+        - They maintain a seperate LSDB for each area they are connected to.
+        - It is recommended that you connect an ABR to a maximum of 2 areas. Otherwise 3+ areas can overburden the router.
+    - An **autonomous system boundary router** (ASBR) is an OSPF router that connects the OSPF network to an external network.
+    - An **intra-area route** is a route to a destination inside the same OSPF area.
+    - An **interarea route** is a route to a destination in a different OSPF area.
+    - small networks can be single-area without any negative effects on performance.
+    - In larger networks, a single-area design can have negative effects:
+        - the SPF algorithm takes more time to calculate routes
+        - the SPF algorithm requires exponentially more processing power on the routers
+        - The larger LSDB takes up more memory on the routers
+        - any small change in the network causes every router to flood LSAs and run the SPF algorithm again
+  
 
 ### EGP (Exterior Gateway Protocol)
 An Exterior Gateway Protocol (EGP) is a dynamic routing protocol that is used to exchange routing information between different ASes. EGPs use a variety of algorithms to find the best path to a destination outside of the AS. The most common EGP is BGP (Border Gateway Protocol) which uses the Path Vector algorithm.
