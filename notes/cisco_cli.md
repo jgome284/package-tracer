@@ -42,6 +42,7 @@ Enter `exit` to leave mode
 - `show ip ospf database` - shows ospf database summary
 - `show ip ospf neighbor` - displays ospf neightbor list
 - `show ip ospf interface` - display ospf interface information
+- `show ip ospf brief` - displays convenient summary of ospf interfaces with attributes like PID, Area, IP address, Cost, State...
 
 ## Global Config Mode
  Enter with `configure terminal`
@@ -86,6 +87,7 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
 - `no shutdown` | `no shut` - used to enable the interface on the network device. Note: Cisco router interface have the `shutdown` command applied to them by default.
 - `description <YOUR DECRIPTION> | desc <YOUR DECRIPTION>` - used to add interface description.
 - `speed <SPEED>` - sets interface speed: 10, 100, auto, etc.
+- `bandwidth <BANDWIDTH>` - sets interface bandwidth which is used to calculate other metrics like OSPF cost, EIGRP metric,  for example... but it does not change the actual speed which the interface operates. It is not receommended to change the interface bandwidth.
 - `duplex <DUPLEX>` - sets interface duplex: auto, full, half.
 - `no switchport` - configures the interface on a multilayer switch as a layer 3 routed port, i.e. not a switchport.
 - `switchport mode access` - sets interface as an access port, a switchport which belongs to a single VLAN, and usually connects to end hosts like PCs.
@@ -115,7 +117,9 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
 - `spanning-tree bpduguard enable` - if an interface with BPDU guard enabled receives a BPDU from another switch, the interface will be shut down to prevent a loop from forming.
 - `channel-group <#> mode ?` - provides configuration options for an etherchannel. The channel-group number has to match for member interfaces on the same switch. However, it doesn't have to match the channel-group number on the other switch
 - `channel-protocol ?` - provides manual configuration options for etherchannel protocol... this command is not very useful considering this is already done automatically when you select the `channel-group <#> mode`. 
-  
+- `ip ospf cost <#>` - manually configure the ip ospf cost of an interface to override the automatic cost calculated. 
+- `ip ospf <process-id> area <area #>` - used to activate OSPF directly on an interface
+
 ## Subinterface Config Mode
 To create a *Router on a Stick* (ROAS) you can create subinterfaces by entering subinterface configuration mode. For example, `interface g0/0.10` creates a subinterface 10 on port g0/0... it is highly recommended for the subinterface number to match the VLAN number!
 - `encapsulation dot1q <vlan-id>` - sets encapsulation mode to 802.1Q on the vlan id provided.
@@ -185,6 +189,9 @@ The network command tells the router to:
 - `maximum-paths <number>` - sets the maximum number of paths allowed between two destinations for load balancing, for example 'maximum-paths 4' sets a maximum number of 4 paths available between routers for load balancing. 
 - `distance <number>` - overrides the default administrative distance for OSPF configuration mode.
 - `router-id <32 bit number>` - configure a OSPF router id, for example, 'router-id 1.1.1.1'... note that you will likely have to reload or use `clear ip ospf process` command, for this to take effect.
+- `auto-cost reference-bandwidth <# Mbps>` - The reference bandwidth in terms of Mbits per second. This should be consistent across all routers. For example 'auto-cost reference-bandwidth 10000'. You should configure a reference bandwidth greater than the fastest links in your network (to allow for future upgrades).
+- `passive-interface default` - used to configure all interfaces as OSPF passive interfaces.
+- `no passive-interface <interface-id>` - used to activate OSPF on a specific interface.
 
 # Configuration
  **Running-Config**
