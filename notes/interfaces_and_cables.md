@@ -19,6 +19,12 @@ Nowadays, MDI-X allows devices to automatically reconfigure where they send and 
 ## Wireless Network Adaptors
 Wireless network adapters connect to a network using radio waves. Wireless adapters are typically available in two frequencies: 2.4 GHz and 5 GHz.
 
+# Loopback Interfaces
+- A loopback interface is a virtual interface in the router.
+- It is always up/up (unless you manually shut it down)
+- It is not dependent on a physical interface.
+- It provides a consistent IP address that can be used to reach / identify the router.
+
 # Ethernet
 
 ## Ethernet Standards
