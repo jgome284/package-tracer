@@ -39,10 +39,12 @@ Enter `exit` to leave mode
 - `show ip protocols` - shows the dynamic routing protocol currently in place, its message timers, version, the maximum number of paths allowed between destinations for load balancing.
 - `show ip eigrp neighbors` - displays eigrp neighbors 
 - `show ip eigrp topology` - displays detailed information about eigrp topology
+- `clear ip ospf process` - resets all OSPF processes which may be necessary to recalculate non-preemptive processes like DR/BDR election, for example.
 - `show ip ospf database` - shows ospf database summary
 - `show ip ospf neighbor` - displays ospf neightbor list
 - `show ip ospf interface` - display ospf interface information
 - `show ip ospf brief` - displays convenient summary of ospf interfaces with attributes like PID, Area, IP address, Cost, State...
+- `show controllers <Serial Interface ID>` - shows things like clockrate, and which side is the DCE or DTE.
 
 ## Global Config Mode
  Enter with `configure terminal`
@@ -86,7 +88,9 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
 - `shutdown` - used to disable interface on network device.
 - `no shutdown` | `no shut` - used to enable the interface on the network device. Note: Cisco router interface have the `shutdown` command applied to them by default.
 - `description <YOUR DECRIPTION> | desc <YOUR DECRIPTION>` - used to add interface description.
-- `speed <SPEED>` - sets interface speed: 10, 100, auto, etc.
+- `speed <SPEED>` - sets interface speed: 10, 100, auto, etc. this is used on **ethernet** interfaces.
+- `clock rate <CLOCK RATE>` - sets interface speed on a **serial** interface. There are standard values that the clockrate must be set to. For example, 1200, 2400, 4800, 9600, 14400, 19200, 28800, etc...
+- `encapsulation <ENCAPSULATION>` - sets the encapsulation of the interface. For example on serial interfaces you can change the default HDLC encapsulation to PPP. The connecting interface must use the same encapsulation for communication to occur properly between devices.
 - `bandwidth <BANDWIDTH>` - sets interface bandwidth which is used to calculate other metrics like OSPF cost, EIGRP metric,  for example... but it does not change the actual speed which the interface operates. It is not receommended to change the interface bandwidth.
 - `duplex <DUPLEX>` - sets interface duplex: auto, full, half.
 - `no switchport` - configures the interface on a multilayer switch as a layer 3 routed port, i.e. not a switchport.
@@ -119,6 +123,13 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
 - `channel-protocol ?` - provides manual configuration options for etherchannel protocol... this command is not very useful considering this is already done automatically when you select the `channel-group <#> mode`. 
 - `ip ospf cost <#>` - manually configure the ip ospf cost of an interface to override the automatic cost calculated. 
 - `ip ospf <process-id> area <area #>` - used to activate OSPF directly on an interface
+- `ip ospf priority <0-255>` - changes the ospf interface priority (default is 1) which is used to chose the designated router or backup designated router for a subnet. If priority is set to 0, the router CANNOT be the DR/BDR for the subnet.
+- `ip ospf network <TYPE>` - used to configure OSPF network type on an interface. This can be useful, for example, if two routeres are directly connected with an Ethernet link, there is no need for a DR/DBR in this case, and the point-to-point network type can be used in this case. Note: not all network types work on all link types. For example, a serial link cannot use the broadcast network type.
+- `ip opsf hello-interval <SECONDS>` - change default OSPF 'Hello' timer on interface. 
+- `ip opsf dead-interval <SECONDS>` - change default OSPF 'Dead' timer on interface.
+- `ip ospf authentication` - enables OSPF password authentication
+- `ip ospf authentication <PASSWORD>` - sets OSPF password authentication
+- `ip mtu <BYTES>` - changes the maximum IP packet size that can be sent through interface.
 
 ## Subinterface Config Mode
 To create a *Router on a Stick* (ROAS) you can create subinterfaces by entering subinterface configuration mode. For example, `interface g0/0.10` creates a subinterface 10 on port g0/0... it is highly recommended for the subinterface number to match the VLAN number!
@@ -188,7 +199,7 @@ The network command tells the router to:
 - `default-information originate` - advertises default gateway information to other routers, for example when you want a router to advertise its access point to the internet. By using this command the router becomes an ASBR, or autonomous system boundary router.
 - `maximum-paths <number>` - sets the maximum number of paths allowed between two destinations for load balancing, for example 'maximum-paths 4' sets a maximum number of 4 paths available between routers for load balancing. 
 - `distance <number>` - overrides the default administrative distance for OSPF configuration mode.
-- `router-id <32 bit number>` - configure a OSPF router id, for example, 'router-id 1.1.1.1'... note that you will likely have to reload or use `clear ip ospf process` command, for this to take effect.
+- `router-id <32 bit number>` - configure a OSPF router id, for example, 'router-id 1.1.1.1'... note that you will likely have to reload or use `clear ip ospf process` command in priviledged exec mode for this to take effect.
 - `auto-cost reference-bandwidth <# Mbps>` - The reference bandwidth in terms of Mbits per second. This should be consistent across all routers. For example 'auto-cost reference-bandwidth 10000'. You should configure a reference bandwidth greater than the fastest links in your network (to allow for future upgrades).
 - `passive-interface default` - used to configure all interfaces as OSPF passive interfaces.
 - `no passive-interface <interface-id>` - used to activate OSPF on a specific interface.
