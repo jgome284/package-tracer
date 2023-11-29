@@ -19,6 +19,13 @@ Nowadays, MDI-X allows devices to automatically reconfigure where they send and 
 ## Wireless Network Adaptors
 Wireless network adapters connect to a network using radio waves. Wireless adapters are typically available in two frequencies: 2.4 GHz and 5 GHz.
 
+# Serial Interfaces
+- AN old technology that is uses on point-to-point connections between routers.
+- One side of a serial connection functions as **DCE** (Data Communications Equipment)
+- The other side functions as **DTE** (Data Terminal Equipment)
+- The DCE side needs to specify the *clock rate* (speed) of the connection. Note that Ethernet interfaces use the **speed** command to configure the interface's operating speed. Serial interfaces use the **clock rate** command.
+- The default encapsulation on a serial interface is HDLC. Of note, MAC addresses are not shared via this encapsulation method.
+
 # Loopback Interfaces
 - A loopback interface is a virtual interface in the router.
 - It is always up/up (unless you manually shut it down)
