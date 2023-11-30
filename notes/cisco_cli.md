@@ -44,7 +44,8 @@ Enter `exit` to leave mode
 - `show ip ospf neighbor` - displays ospf neightbor list
 - `show ip ospf interface` - display ospf interface information
 - `show ip ospf brief` - displays convenient summary of ospf interfaces with attributes like PID, Area, IP address, Cost, State...
-- `show controllers <Serial Interface ID>` - shows things like clockrate, and which side is the DCE or DTE.
+- `show controllers <Serial Interface ID>` - shows things like clockrate, and which side is the DCE or DTE on a serial connection for example.
+- `show standby` - displays details about HSRP configuration.
 
 ## Global Config Mode
  Enter with `configure terminal`
@@ -130,6 +131,11 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
 - `ip ospf authentication` - enables OSPF password authentication
 - `ip ospf authentication <PASSWORD>` - sets OSPF password authentication
 - `ip mtu <BYTES>` - changes the maximum IP packet size that can be sent through interface.
+- `standby <GROUP NUMBER>` - enables HSRP (Hot Standby Router Protocol) version 1 on the router by default. If using multiple VLANS in the network, it is good practive to make the HSRP group and VLAN number to match. The group number must match between routers.
+- `standby version 2` - changes HSRP (Hot Standby Router Protocol) default to version 2 on the router.
+- `standby <GROUP NUMBER> ip <VIRTUAL IP ADDRESS>` - sets the virtual IP address for HSRP on the router.
+- `standby <GROUP NUMBER> priority <#>` - manually configure the priority of the router, which is used to determine its role as either the active or backup router.
+- `standby <GROUP NUMBER> preempt` - Causes a router with a higher priority to take the role of active router, even if another router already has the role. This is only necessary on the router you want to become active.
 
 ## Subinterface Config Mode
 To create a *Router on a Stick* (ROAS) you can create subinterfaces by entering subinterface configuration mode. For example, `interface g0/0.10` creates a subinterface 10 on port g0/0... it is highly recommended for the subinterface number to match the VLAN number!
