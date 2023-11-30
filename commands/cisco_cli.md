@@ -20,7 +20,8 @@ Enter `exit` to leave mode
  - `clear mac address-table dynamic` - used to clear all dynamic MAC addresses from network device.
  - `clear mac address-table dynamic address <INSERT DYNAMIC MAC ADDRESS HERE>` - used to clear specific dynamic MAC address.
  - `clear mac address-table dynamic interface <INSERT PORT ID HERE>` - used to clear all dynamic MAC addresses from network device.
- - `show ip interface brief` | `sh ip int br` - shows ip status of router interfaces... information includes interface name, IP-Address assigned, layer 1 status - whether the connection is up or down, and the layer 2 - protocol - status 
+ - `show ip interface brief` | `sh ip int br` - shows IPv4 status of router interfaces... information includes interface name, IP-Address assigned, layer 1 status - whether the connection is up or down, and the layer 2 - protocol - status 
+ - `show ipv6 interface brief` | `sh ipv6 int br` - shows IPv6 status of router interfaces... 
  - `show interfaces` - shows information about all interfaces
  - `show interfaces <INTERFACE PORT HERE>` - shows interface information for specified port. For example, `show interfaces g0/0`
  - `show interfaces <INTERFACE PORT HERE> switchport` - shows switchport administrative and operational modes.
@@ -60,6 +61,7 @@ Enter `exit` to leave mode
  - `hostname` - change hostname
  - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <NEXT-HOP>` - used to configure a static route on a router. For example, `ip route 192.168.1.0 255.255.255.0 192.168.34.3` would configure the router's 192.168.34.3 port interface as the next hop for all traffic with a destination address of 192.168.1.0/24.
  - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <EXIT-INTERFACE>` - used to configure a static route on the router by pointing to a port interface.
+ - `ipv6 route <DESTINATION IPv6 ADDRESS>/<NETWORK PREFIX> <NEXT-HOP IPv6 ADDRESS>` - used to configure a static IPv6 route.
  - `vlan <VLAN #>` - creates a vlan and enables vlan configuration.
  - `ip routing` - enables layer 3 routing on a multilayer switch.
   - `vtp domain <NAME>` - sets vtp domain name on switch. If a switch with no VTP domain (domain NULL) receives a VTP advertisement with a VTP domain name, it will automatically join that VTP domain. Changing the VTP domain to an unused domain will reset the revision number to 0.
@@ -73,6 +75,7 @@ Enter `exit` to leave mode
  - `spanning-tree vlan <vlan-number> port-priority` - change an interface's spanning tree port priority.
  - `interface port-channel <#>` - creates etherchannel/portchannel interface.
  - `port-channel load-balance ?` - change the etherchannel load-balance configuration to the displayed options.
+- `ipv6 unicast-routing` - allows the router to perform IPv6 routing.
 
  To set a default route to the internet you can use the `ip route` command with the least specific destination ip address, i.e. `ip route 0.0.0.0 0.0.0.0 <SELECT EXIT-INTERFACE or NEXT-HOP IP or both>`
 
@@ -85,7 +88,8 @@ You can also create loop back interfaces. For example `interface loopback <numbe
 
 To configure several interfaces all at once, type `interface range <INTERFACE START> - <INTERFACE END>`
 
-- `ip address <IP ADDRESS> <NETMASK>` | `ip add <IP ADDRESS> <NETMASK>` - used to set IP address. For example, `ip address 10.255.255.254 255.0.0.0` for an ip address that is equal to the Class A address, 10.255.255.254/8.
+- `ip address <IPv4 ADDRESS> <NETMASK>` | `ip add <IP ADDRESS> <NETMASK>` - used to set IPv4 address on interface. For example, 'ip address 10.255.255.254 255.0.0.0' for an ip address that is equal to the Class A address, 10.255.255.254/8.
+- `ipv6 address <IPv6 ADDRESS>/<NETWORK PREFIX>` - used to set IPv6 address on interface. For example, 'ipv6 address 2001:db8:0:0::1/64'... note that Link-Local Addresses are automatically configured on the interface as well.
 - `shutdown` - used to disable interface on network device.
 - `no shutdown` | `no shut` - used to enable the interface on the network device. Note: Cisco router interface have the `shutdown` command applied to them by default.
 - `description <YOUR DECRIPTION> | desc <YOUR DECRIPTION>` - used to add interface description.
