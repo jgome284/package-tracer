@@ -62,6 +62,7 @@ Enter `exit` to leave mode
  - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <NEXT-HOP>` - used to configure a static route on a router. For example, `ip route 192.168.1.0 255.255.255.0 192.168.34.3` would configure the router's 192.168.34.3 port interface as the next hop for all traffic with a destination address of 192.168.1.0/24.
  - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <EXIT-INTERFACE>` - used to configure a static route on the router by pointing to a port interface.
  - `ipv6 route <DESTINATION IPv6 ADDRESS>/<NETWORK PREFIX> <NEXT-HOP IPv6 ADDRESS>` - used to configure a static IPv6 route.
+ - `ipv6 enable` - enables IPv6 on an interface and a Link Local Address is automatically generated
  - `vlan <VLAN #>` - creates a vlan and enables vlan configuration.
  - `ip routing` - enables layer 3 routing on a multilayer switch.
   - `vtp domain <NAME>` - sets vtp domain name on switch. If a switch with no VTP domain (domain NULL) receives a VTP advertisement with a VTP domain name, it will automatically join that VTP domain. Changing the VTP domain to an unused domain will reset the revision number to 0.
@@ -90,6 +91,8 @@ To configure several interfaces all at once, type `interface range <INTERFACE ST
 
 - `ip address <IPv4 ADDRESS> <NETMASK>` | `ip add <IP ADDRESS> <NETMASK>` - used to set IPv4 address on interface. For example, 'ip address 10.255.255.254 255.0.0.0' for an ip address that is equal to the Class A address, 10.255.255.254/8.
 - `ipv6 address <IPv6 ADDRESS>/<NETWORK PREFIX>` - used to set IPv6 address on interface. For example, 'ipv6 address 2001:db8:0:0::1/64'... note that Link-Local Addresses are automatically configured on the interface as well.
+- `ipv6 address <IPv6 NETWORK ADDRESS>/<NETWORK PREFIX> eui-64` - used to set EUI-64 IPv6 address on interface.
+- `ipv6 address <IPv6 ADDRESS>/<NETWORK PREFIX> anycast` - used to configure a global unicast, or unique local address and specify it as an anycast address.
 - `shutdown` - used to disable interface on network device.
 - `no shutdown` | `no shut` - used to enable the interface on the network device. Note: Cisco router interface have the `shutdown` command applied to them by default.
 - `description <YOUR DECRIPTION> | desc <YOUR DECRIPTION>` - used to add interface description.
