@@ -1,6 +1,11 @@
 # Connecting to a Cisco Device
- Connnect via console port. On a RJ-45 port, a rollover cable is used.
- Make a serial connection with the Putty terminal emulator. 
+1.  Connnect via console port. On a RJ-45 port, a rollover cable is used.
+2.  Make a serial connection with the Putty terminal emulator. 
+
+# Command Shortcuts
+ - many commands have a shortcut, for example: `conf t` is the shortcut for `configure terminal`...
+ - Use `tab` to complete commands... 
+ - Use `?` to search for command options
 
 # CLI Modes
 ## User Exec Mode
@@ -259,8 +264,3 @@ To cancel commands, use `no` before the command of interest. For example, to avo
  - `auto-cost reference-bandwidth <# Mbps>` - The reference bandwidth in terms of Mbits per second. This should be consistent across all routers. For example 'auto-cost reference-bandwidth 10000'. You should configure a reference bandwidth greater than the fastest links in your network (to allow for future upgrades).
  - `passive-interface default` - used to configure all interfaces as OSPF passive interfaces.
  - `no passive-interface <interface-id>` - used to activate OSPF on a specific interface.
-
-# Shortcuts
- - many commands have a shortcut, for example: `conf t` is the shortcut for `configure terminal`...
- - Use `tab` to complete commands... 
- - Use `?` to search for command options
