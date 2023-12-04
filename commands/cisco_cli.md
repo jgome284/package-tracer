@@ -2,7 +2,7 @@
 1.  Connnect via console port. On a RJ-45 port, a rollover cable is used.
 2.  Make a serial connection with the Putty terminal emulator. 
 
-# Command Shortcuts
+# CLI Shortcuts
  - many commands have a shortcut, for example: `conf t` is the shortcut for `configure terminal`...
  - Use `tab` to complete commands... 
  - Use `?` to search for command options
@@ -93,8 +93,7 @@
  - `ip routing` - enables layer 3 routing on a multilayer switch.
 - `ipv6 unicast-routing` - allows the router to perform IPv6 routing.
  - `ipv6 route <DESTINATION IPv6 ADDRESS>/<NETWORK PREFIX> <NEXT-HOP IPv6 ADDRESS>` - used to configure a static IPv6 route.
- - `ipv6 enable` - enables IPv6 on an interface and a Link Local Address is automatically generated
-
+ 
  ### VLAN Configs
  - `vlan <VLAN #>` - creates a vlan and enables vlan configuration.
   - `vtp domain <NAME>` - sets vtp domain name on switch. If a switch with no VTP domain (domain NULL) receives a VTP advertisement with a VTP domain name, it will automatically join that VTP domain. Changing the VTP domain to an unused domain will reset the revision number to 0.
@@ -129,6 +128,7 @@ To cancel commands, use `no` before the command of interest. For example, to avo
  - `ipv6 address <IPv6 ADDRESS>/<NETWORK PREFIX>` - used to set IPv6 address on interface. For example, 'ipv6 address 2001:db8:0:0::1/64'... note that Link-Local Addresses are automatically configured on the interface as well.
  - `ipv6 address <IPv6 NETWORK ADDRESS>/<NETWORK PREFIX> eui-64` - used to set EUI-64 IPv6 address on interface.
  - `ipv6 address <IPv6 ADDRESS>/<NETWORK PREFIX> anycast` - used to configure a global unicast, or unique local address and specify it as an anycast address.
+ - `ipv6 enable` - enables IPv6 on an interface and a Link Local Address is automatically generated
 
  ### Basic Commands
  - `shutdown` - used to disable interface on network device.
