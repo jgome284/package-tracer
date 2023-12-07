@@ -29,6 +29,7 @@
  - `clear mac address-table dynamic address <INSERT DYNAMIC MAC ADDRESS HERE>` - used to clear specific dynamic MAC address.
  - `clear mac address-table dynamic interface <INSERT PORT ID HERE>` - used to clear all dynamic MAC addresses from network device.
  - `show ip route` - shows the routers ip routing table. If prompt state *Gateway of last resort is not set* then a default route has not been configured yet.
+ - `show ipv6 neighbor` - shows the IPv6 neighbor table which displays the IPv6 addresses that a network device learns through neighbor discovery protocol (NDP)
 
  ### Interfaces
  - `show ip interface brief` | `sh ip int br` - shows IPv4 status of router interfaces... information includes interface name, IP-Address assigned, layer 1 status - whether the connection is up or down, and the layer 2 - protocol - status 
@@ -92,8 +93,9 @@
  - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <EXIT-INTERFACE>` - used to configure a static route on the router by pointing to a port interface.
  - `ip routing` - enables layer 3 routing on a multilayer switch.
 - `ipv6 unicast-routing` - allows the router to perform IPv6 routing.
- - `ipv6 route <DESTINATION IPv6 ADDRESS>/<NETWORK PREFIX> <NEXT-HOP IPv6 ADDRESS>` - used to configure a static IPv6 route.
- 
+ - `ipv6 route <DESTINATION IPv6 ADDRESS>/<NETWORK PREFIX> <NEXT-HOP IPv6 ADDRESS | EXIT-INTERFACE>` - used to configure a static IPv6 route.
+ - `ipv6 route <DESTINATION IPv6 ADDRESS>/<NETWORK PREFIX> <NEXT-HOP IPv6 ADDRESS | EXIT-INTERFACE> <ADMINISTRATIVE DISTANCE>` - used to configure a floating static IPv6 route.
+
  ### VLAN Configs
  - `vlan <VLAN #>` - creates a vlan and enables vlan configuration.
   - `vtp domain <NAME>` - sets vtp domain name on switch. If a switch with no VTP domain (domain NULL) receives a VTP advertisement with a VTP domain name, it will automatically join that VTP domain. Changing the VTP domain to an unused domain will reset the revision number to 0.
@@ -128,6 +130,8 @@ To cancel commands, use `no` before the command of interest. For example, to avo
  - `ipv6 address <IPv6 ADDRESS>/<NETWORK PREFIX>` - used to set IPv6 address on interface. For example, 'ipv6 address 2001:db8:0:0::1/64'... note that Link-Local Addresses are automatically configured on the interface as well.
  - `ipv6 address <IPv6 NETWORK ADDRESS>/<NETWORK PREFIX> eui-64` - used to set EUI-64 IPv6 address on interface.
  - `ipv6 address <IPv6 ADDRESS>/<NETWORK PREFIX> anycast` - used to configure a global unicast, or unique local address and specify it as an anycast address.
+ - `ipv6 address autoconfig` - command to run Stateless Address Auto-configuration (SLAAC). The device uses Neighbor Discovery Protocol (NDP) to learn the prefix used on the local link via RS and RA messages. The device will then use EUI-64 to generate the interface ID, or it will be randomly generated (depending on the device/maker)
+
  - `ipv6 enable` - enables IPv6 on an interface and a Link Local Address is automatically generated
 
  ### Basic Commands
