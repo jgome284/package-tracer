@@ -13,14 +13,18 @@
  Enter `exit` to leave mode
 
 ## Priveledged Exec Mode
- Enter with the `enable` | `en` command.
+ Enter with the `enable` OR `en` command.
  Enter `exit` to leave mode
 
  Priviledged Exec Commands Include:
 ### Configuration
- - `show running-config` | `sh run` -  Configuration for changes made during runtime
- - `show startup-config` | `sh start` - Configuration preloaded for startup
- - `write` | `write memory` | `copy running-config startup-config` - all commands are used to save the running configuration as the startup configuration
+ - `show running-config` OR `sh run` -  Configuration for changes made during runtime
+ - `show running-config | include <FILTER CRITERIA>` - The '|' character pipes the output of the 'show running-config' command and the 'include' command filters down this output to only the lines which have the filter criteria present. For example 'show running-config | include route' displays the routes configured on the device.
+ - `show running-config | section <SECTION>` - The '|' character pipes the output of the 'show running-config' command and the 'section' command filters the output to display all lines that are part of the section called. For example, 'show running-config | section access-list' displays all ACLs and their entries.
+ - `show startup-config` OR `sh start` - Configuration preloaded for startup
+ - `write` OR `write memory` OR `copy running-config startup-config` - all commands are used to save the running configuration as the startup configuration
+ - `show access-lists` - displays all types of Access Control Lists (ACLs) that are configured for use on the network device.
+ - `show ip access-lists` - displays only Standard IP and Extended IP ACLs
 
  ### Addressing
  - `show arp` - used to display the ARP cache on a device. The ARP cache is a database that stores the IP addresses and MAC addresses of devices on the network.
@@ -82,12 +86,15 @@
 
  Global Commands include:
 
- ### Credentials
+ ### Security
+ - `hostname` - change hostname
  - `enable password <YOUR PASSWORD HERE>` - enables `<YOUR PASSWORD HERE>` as the password
  - `service password-encryption` - used to encrypt password so that it does not display on `show running-config` command.
  - `enable secret <YOUR SECRET HERE>` enables `<YOUR SECRET HERE>` as a secret which offers more robust encryption
- - `hostname` - change hostname
- 
+ - `access-list <NUMBER> <DENY | PERMIT> <IP> <WILDCARD-MASK>` - used to configure an access control list entry. If the wildcard mask is not added to the command, the CLI will assume a /32 mask.
+ - `access-list <NUMBER> <DENY | PERMIT> any` - used to configure an ACL entry that broadly denies or permits traffic. Another viable way to do this is, for example, is 'access-list 1 permit 0.0.0.0 255.255.255.255.
+ - `access-list <NUMBER> remark <ENTER YOUR REMARK>` - used to add a comment to the ACL so you remember the purpose of an entry.
+  
  ### Routing
  - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <NEXT-HOP>` - used to configure a static route on a router. For example, `ip route 192.168.1.0 255.255.255.0 192.168.34.3` would configure the router's 192.168.34.3 port interface as the next hop for all traffic with a destination address of 192.168.1.0/24.
  - `ip route <DESTINATION IP-ADDRESS> <NETMASK> <EXIT-INTERFACE>` - used to configure a static route on the router by pointing to a port interface.
@@ -125,15 +132,6 @@ To cancel commands, use `no` before the command of interest. For example, to avo
 
  To configure several interfaces all at once, type `interface range <INTERFACE START> - <INTERFACE END>`
 
- ### Addressing
- - `ip address <IPv4 ADDRESS> <NETMASK>` | `ip add <IP ADDRESS> <NETMASK>` - used to set IPv4 address on interface. For example, 'ip address 10.255.255.254 255.0.0.0' for an ip address that is equal to the Class A address, 10.255.255.254/8.
- - `ipv6 address <IPv6 ADDRESS>/<NETWORK PREFIX>` - used to set IPv6 address on interface. For example, 'ipv6 address 2001:db8:0:0::1/64'... note that Link-Local Addresses are automatically configured on the interface as well.
- - `ipv6 address <IPv6 NETWORK ADDRESS>/<NETWORK PREFIX> eui-64` - used to set EUI-64 IPv6 address on interface.
- - `ipv6 address <IPv6 ADDRESS>/<NETWORK PREFIX> anycast` - used to configure a global unicast, or unique local address and specify it as an anycast address.
- - `ipv6 address autoconfig` - command to run Stateless Address Auto-configuration (SLAAC). The device uses Neighbor Discovery Protocol (NDP) to learn the prefix used on the local link via RS and RA messages. The device will then use EUI-64 to generate the interface ID, or it will be randomly generated (depending on the device/maker)
-
- - `ipv6 enable` - enables IPv6 on an interface and a Link Local Address is automatically generated
-
  ### Basic Commands
  - `shutdown` - used to disable interface on network device.
  - `no shutdown` | `no shut` - used to enable the interface on the network device. Note: Cisco router interface have the `shutdown` command applied to them by default.
@@ -146,6 +144,18 @@ To cancel commands, use `no` before the command of interest. For example, to avo
  - `no switchport` - configures the interface on a multilayer switch as a layer 3 routed port, i.e. not a switchport.
  - `default interface <interface number>` - resets setting on the interface.
  - `ip mtu <BYTES>` - changes the maximum IP packet size that can be sent through interface. 
+
+ ### Addressing
+ - `ip address <IPv4 ADDRESS> <NETMASK>` | `ip add <IP ADDRESS> <NETMASK>` - used to set IPv4 address on interface. For example, 'ip address 10.255.255.254 255.0.0.0' for an ip address that is equal to the Class A address, 10.255.255.254/8.
+ - `ipv6 address <IPv6 ADDRESS>/<NETWORK PREFIX>` - used to set IPv6 address on interface. For example, 'ipv6 address 2001:db8:0:0::1/64'... note that Link-Local Addresses are automatically configured on the interface as well.
+ - `ipv6 address <IPv6 NETWORK ADDRESS>/<NETWORK PREFIX> eui-64` - used to set EUI-64 IPv6 address on interface.
+ - `ipv6 address <IPv6 ADDRESS>/<NETWORK PREFIX> anycast` - used to configure a global unicast, or unique local address and specify it as an anycast address.
+ - `ipv6 address autoconfig` - command to run Stateless Address Auto-configuration (SLAAC). The device uses Neighbor Discovery Protocol (NDP) to learn the prefix used on the local link via RS and RA messages. The device will then use EUI-64 to generate the interface ID, or it will be randomly generated (depending on the device/maker)
+
+ - `ipv6 enable` - enables IPv6 on an interface and a Link Local Address is automatically generated
+ 
+ ### Security
+ - `ip access-group <NUMBER> <IN | OUT>` - applies an ACL to the interface in the in or out direction.
 
  ### VLAN Configs
  - `switchport nonegotiate` - Used to disable DTP (Dynamic Trunking Protocol) negotiation on an interface.
@@ -268,3 +278,7 @@ To cancel commands, use `no` before the command of interest. For example, to avo
  - `auto-cost reference-bandwidth <# Mbps>` - The reference bandwidth in terms of Mbits per second. This should be consistent across all routers. For example 'auto-cost reference-bandwidth 10000'. You should configure a reference bandwidth greater than the fastest links in your network (to allow for future upgrades).
  - `passive-interface default` - used to configure all interfaces as OSPF passive interfaces.
  - `no passive-interface <interface-id>` - used to activate OSPF on a specific interface.
+
+## Standard Named ACL Configuration Mode
+To enter Standard Named Access Control List Configuration Mode, you must be in global config mode, then enter `ip access-list standard <ACL-NAME>`.
+- `<ENTRY-NUMBER> <DENY | PERMIT> <IP> <WILDCARD-MASK>` - used to specify an access control entry in the named ACL
